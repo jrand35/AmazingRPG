@@ -1,7 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{9B62191D-C597-E7C4-B2A4-7E4D27A8DF0E}") = "AmazingRPG", "Assembly-CSharp.csproj", "{E745088B-4972-6898-4445-A9FFB389FDD1}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingRPG.CSharp", "AmazingRPG.CSharp.csproj", "{5988C922-7C83-F986-B322-5706BF69F22D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E745088B-4972-6898-4445-A9FFB389FDD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E745088B-4972-6898-4445-A9FFB389FDD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E745088B-4972-6898-4445-A9FFB389FDD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E745088B-4972-6898-4445-A9FFB389FDD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5988C922-7C83-F986-B322-5706BF69F22D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5988C922-7C83-F986-B322-5706BF69F22D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5988C922-7C83-F986-B322-5706BF69F22D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5988C922-7C83-F986-B322-5706BF69F22D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

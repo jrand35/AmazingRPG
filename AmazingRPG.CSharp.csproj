@@ -57,6 +57,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -72,6 +78,8 @@
     <Compile Include="Assets\Scripts\ActionTarget.cs" />
     <Compile Include="Assets\Scripts\BattleBehavior.cs" />
     <Compile Include="Assets\Scripts\BattleController.cs" />
+    <Compile Include="Assets\Scripts\BattleMenu.cs" />
+    <Compile Include="Assets\Scripts\BattleMenuItem.cs" />
     <Compile Include="Assets\Scripts\Battler.cs" />
     <Compile Include="Assets\Scripts\BattlerID.cs" />
     <Compile Include="Assets\Scripts\CharacterBehavior.cs" />
