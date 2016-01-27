@@ -1,17 +1,45 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class BattleController : MonoBehaviour {
+    public BattleMenu BattleMenu;
     public GameObject MagicCircle;
     public Text text;
     public Battler[] Battlers;
     private Material MagicCircleMaterial;
+    private CharacterTurnArgs charTurnArgs;
+    private bool waitForCharacterTurn;
+
 	void Start () {
+        waitForCharacterTurn = false;
         StartCoroutine(Run());
         MagicCircleMaterial = MagicCircle.GetComponent<MeshRenderer>().material;
         StartCoroutine(SpinCircle());
+
+        IList<Battler> allCharacters = Battlers.Where(b => b.BattlerType == BattlerType.Character).ToList();
+        IList<Battler> allEnemies = Battlers.Where(b => b.BattlerType == BattlerType.Enemy).ToList();
+        BattleMenu.allCharacters = allCharacters;
+        BattleMenu.allEnemies = allEnemies;
 	}
+
+    void OnCharacterTurn(CharacterTurnArgs args)
+    {
+        waitForCharacterTurn = false;
+        charTurnArgs = args;
+    }
+
+    void OnEnable()
+    {
+        BattleMenu.StartCharacterTurn += OnCharacterTurn;
+    }
+
+    void OnDisable()
+    {
+        BattleMenu.StartCharacterTurn -= OnCharacterTurn;
+    }
 
     IEnumerator SpinCircle()
     {
@@ -38,13 +66,18 @@ public class BattleController : MonoBehaviour {
         {
             foreach (Battler battler in Battlers)
             {
-                if (battler.BattlerID == BattlerID.Character)
+                if (battler.BattlerType == BattlerType.Character)
                 {
-                    yield return battler.BattleBehavior.SpecialAbilities[0].Run(battler, battler);
+                    waitForCharacterTurn = true;
+                    BattleMenu.CharacterTurn(battler);
+                    while (waitForCharacterTurn)
+                    {
+                        yield return 0;
+                    }
                 }
                 else
                 {
-                    yield return battler.BattleBehavior.StandardAttack(battler, battler);
+                    //yield return battler.BattleBehavior.StandardAttack(battler, battler);
                 }
             }
             yield return 0;

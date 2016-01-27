@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BattleBehavior : MonoBehaviour {
     public string Name { get; protected set; }
-    public Stats Stats { get; protected set; }
+    public Stats Stats { get; set; }
     public IList<Action> SpecialAbilities { get; protected set; }
     protected Battler Battler { get; set; }
 	// Use this for initialization
