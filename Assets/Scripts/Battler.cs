@@ -10,6 +10,8 @@ public class Battler : MonoBehaviour
     public IList<Item> Inventory { get; private set; }
 	// Use this for initialization
 	void Start () {
+        Inventory = new List<Item>();
+        Inventory.Add(new PotionItem { Quantity = 5 });
         switch (BattlerID)
         {
             case BattlerID.Character:

@@ -34,7 +34,7 @@ public class BattleBehavior : MonoBehaviour {
 
     public virtual void RestoreHP(Battler user, int amount)
     {
-        //Debug.Log("Restored HP");
+        Debug.Log("Restored HP");
         Stats.CurrentHP += amount;
         if (Stats.CurrentHP > Stats.MaxHP)
         {

@@ -54,7 +54,7 @@ public class BattleController : MonoBehaviour {
         while (true)
         {
             angle += 3f;
-            alphaCount += 0.1f;
+            alphaCount += 0.05f; //0.1f;
             float alpha = 0.4f + 0.2f * Mathf.Cos(alphaCount);
             Vector3 scale = initScale + (initScale * -0.15f * Mathf.Cos(alphaCount));
             MagicCircle.transform.localScale = scale;
@@ -81,6 +81,7 @@ public class BattleController : MonoBehaviour {
                 break;
 
             case ActionType.Item:
+                user.Inventory[index].Use(user, target);
                 break;
 
             case ActionType.Defend:

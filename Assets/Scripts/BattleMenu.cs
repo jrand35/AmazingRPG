@@ -185,12 +185,53 @@ public class BattleMenu : MonoBehaviour {
 
     void ItemsMenu()
     {
+        IList<Item> inventory = currentCharacter.Inventory;
+        PrevMenu = CurrentMenu;
+        CurrentMenu = BattleMenuItem.Item;
 
+        if (inventory.Count > 0)
+        {
+            listSize = inventory.Count;
+            for (int i = 0; i < maxListSize; i++)
+            {
+                if (i >= listSize)
+                {
+                    Text[i].text = "";
+                }
+                else
+                {
+                    Text[i].text = inventory[i].Name + " (" + inventory[i].Quantity + ")";
+                }
+            }
+        }
+        else
+        {
+            listSize = 1;
+            Text[0].text = "No items";
+            for (int i = 1; i < maxListSize; i++)
+            {
+                Text[i].text = "";
+            }
+        }
     }
 
     void CharacterMenu()
     {
+        PrevMenu = CurrentMenu;
+        CurrentMenu = BattleMenuItem.Player;
+        listSize = allCharacters.Count;
 
+        for (int i = 0; i < maxListSize; i++)
+        {
+            if (i >= listSize)
+            {
+                Text[i].text = "";
+            }
+            else
+            {
+                Text[i].text = allCharacters[i].BattleBehavior.Name;
+            }
+        }
     }
 
     void UpdateMenu()
@@ -294,6 +335,12 @@ public class BattleMenu : MonoBehaviour {
 
             //Use an item
             case BattleMenuItem.Item:
+                //TODO: Check if an item affects 1 or multiple party members
+                if (currentCharacter.Inventory.Count > 0)
+                    CharacterMenu();
+                break;
+
+            case BattleMenuItem.Player:
                 if (currentCharacter.Inventory.Count == 0)
                 {
                     break;
@@ -302,16 +349,13 @@ public class BattleMenu : MonoBehaviour {
                 CharacterTurnArgs itemArgs = new CharacterTurnArgs
                 {
                     User = currentCharacter,
-                    Target = currentCharacter,
+                    Target = allCharacters[charIndex],
                     ActionTarget = ActionTarget.PartyMember,
                     ActionIndex = itemIndex,
                     ActionType = ActionType.Item
                 };
                 OnCharacterTurn(itemArgs);
                 Finish();
-                break;
-
-            case BattleMenuItem.Player:
                 break;
 
             case BattleMenuItem.AllPlayers:
@@ -387,6 +431,14 @@ public class BattleMenu : MonoBehaviour {
                 break;
 
             case BattleMenuItem.Player:
+                if (PrevMenu == BattleMenuItem.Item)
+                {
+                    ItemsMenu();
+                }
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    SpecialMenu();
+                }
                 break;
 
             case BattleMenuItem.AllPlayers:
