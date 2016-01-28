@@ -86,6 +86,7 @@ public class BattleMenu : MonoBehaviour {
 
     public void CharacterTurn(Battler character)
     {
+        gameObject.SetActive(true);
         currentCharacter = character;
         mainIndex = 0;
         specialIndex = 0;
@@ -361,7 +362,40 @@ public class BattleMenu : MonoBehaviour {
 
     void Back()
     {
+        switch (CurrentMenu)
+        {
+            case BattleMenuItem.Main:
+                break;
 
+            case BattleMenuItem.Enemy:
+                if (PrevMenu == BattleMenuItem.Main)
+                {
+                    MainMenu();
+                }
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    SpecialMenu();
+                }
+                break;
+
+            case BattleMenuItem.Special:
+                MainMenu();
+                break;
+
+            case BattleMenuItem.Item:
+                MainMenu();
+                break;
+
+            case BattleMenuItem.Player:
+                break;
+
+            case BattleMenuItem.AllPlayers:
+                break;
+
+            case BattleMenuItem.AllEnemies:
+                break;
+        }
+        UpdateMenu();
     }
 
     void Finish()

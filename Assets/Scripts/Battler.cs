@@ -24,23 +24,25 @@ public class Battler : MonoBehaviour
         }
 	}
 
-    public void RestoreHP(Battler user, int amount)
-    {
-        BattleBehavior.Stats.CurrentHP += amount;
-        if (BattleBehavior.Stats.CurrentHP > BattleBehavior.Stats.MaxHP)
-        {
-            BattleBehavior.Stats.CurrentHP = BattleBehavior.Stats.MaxHP;
-        }
-    }
+    //These two functions are used in BattleBehavior
+    //public void RestoreHP(Battler user, int amount)
+    //{
+    //    BattleBehavior.Stats.CurrentHP += amount;
+    //    if (BattleBehavior.Stats.CurrentHP > BattleBehavior.Stats.MaxHP)
+    //    {
+    //        BattleBehavior.Stats.CurrentHP = BattleBehavior.Stats.MaxHP;
+    //    }
+    //}
 
-    public void TakeDamage(Battler user, int amount)
-    {
-        BattleBehavior.Stats.CurrentHP -= amount;
-        if (BattleBehavior.Stats.CurrentHP < 0)
-        {
-            BattleBehavior.Stats.CurrentHP = 0;
-        }
-    }
+    //public void TakeDamage(Battler user, int amount)
+    //{
+    //    Debug.Log(BattleBehavior.Name + " took " + amount.ToString() + " damage");
+    //    BattleBehavior.Stats.CurrentHP -= amount;
+    //    if (BattleBehavior.Stats.CurrentHP < 0)
+    //    {
+    //        BattleBehavior.Stats.CurrentHP = 0;
+    //    }
+    //}
 	
 	// Update is called once per frame
 	void Update () {

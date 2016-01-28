@@ -10,6 +10,6 @@ public class PotionItem : Item {
 
     public override void Use(Battler user, Battler recipient)
     {
-        recipient.RestoreHP(user, 50);
+        recipient.BattleBehavior.RestoreHP(user, 50);
     }
 }
