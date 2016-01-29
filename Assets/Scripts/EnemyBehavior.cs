@@ -10,15 +10,15 @@ public class EnemyBehavior : BattleBehavior
         Name = "Enemy";
         Stats = new Stats
         {
-            MaxHP = 400,
-            MaxSP = 400,
-            CurrentHP = 400,
-            CurrentSP = 400,
-            Attack = 20,
-            Defense = 20,
-            SpAttack = 400,
-            SpDefense = 400,
-            Speed = 400,
+            MaxHP = 300,
+            MaxSP = 300,
+            CurrentHP = 300,
+            CurrentSP = 300,
+            Attack = 30,
+            Defense = 30,
+            SpAttack = 300,
+            SpDefense = 300,
+            Speed = 300,
             Luck = 10
         };
         SpecialAbilities = new List<Action>();

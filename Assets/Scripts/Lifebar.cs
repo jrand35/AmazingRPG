@@ -4,6 +4,7 @@ using System.Collections;
 
 public class Lifebar : MonoBehaviour {
     public Text HPNumber;
+    public Text characterName;
     public Battler Character
     {
         get
@@ -15,6 +16,7 @@ public class Lifebar : MonoBehaviour {
             character = value;
             character.BattleBehavior.HPChanged += UpdateLifebar;
             UpdateLifebar(character.BattleBehavior.Stats.CurrentHP, character.BattleBehavior.Stats.MaxHP);
+            characterName.text = character.BattleBehavior.Name;
         }
     }
     private Battler character;
