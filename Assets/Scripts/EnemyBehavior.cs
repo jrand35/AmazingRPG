@@ -7,21 +7,26 @@ public class EnemyBehavior : BattleBehavior
     public EnemyBehavior(Battler parent)
     {
         Battler = parent;
-        Name = "Enemy";
+    }
+
+    public override void Initialize()
+    {
+        Name = "Block";
         Stats = new Stats
         {
             MaxHP = 300,
             MaxSP = 300,
             CurrentHP = 300,
             CurrentSP = 300,
-            Attack = 30,
-            Defense = 30,
+            Attack = 300,
+            Defense = 300,
             SpAttack = 300,
             SpDefense = 300,
             Speed = 300,
-            Luck = 10
+            Luck = 20
         };
         SpecialAbilities = new List<Action>();
+        //SpecialAbilities.Add(new Restore(this));
     }
 
     public override IEnumerator StandardAttack(Battler user, Battler target)

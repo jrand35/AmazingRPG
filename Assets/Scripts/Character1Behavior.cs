@@ -7,6 +7,10 @@ public class Character1Behavior : BattleBehavior
     public Character1Behavior(Battler parent)
     {
         Battler = parent;
+    }
+
+    public override void Initialize()
+    {
         Name = "Josh";
         Stats = new Stats
         {
@@ -27,10 +31,13 @@ public class Character1Behavior : BattleBehavior
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
     {
-        yield return new WaitForSeconds(1f);
+        Vector3 startPos = user.gameObject.transform.position;
+        yield return Move.MoveInFrontOfBattler(user, target, startPos);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         target.BattleBehavior.TakeDamage(user, baseDamage);
+        yield return new WaitForSeconds(0.5f);
+        yield return Move.MoveBackFromBattler(user, target, startPos);
     }
 
     class Restore : Action
@@ -39,6 +46,7 @@ public class Character1Behavior : BattleBehavior
         {
             BattleBehavior = parent;
             Name = "Restore";
+            Description = "Restores 100 HP to a party member.";
             RequiredSP = 5;
             Power = 0;
             ActionTarget = ActionTarget.PartyMember;
@@ -47,8 +55,8 @@ public class Character1Behavior : BattleBehavior
         public override IEnumerator Run(Battler user, Battler target)
         {
             yield return new WaitForSeconds(1f);
-            target.BattleBehavior.Stats.CurrentHP += 20;
-            Debug.Log(user.BattleBehavior.Name + " restored 20 HP to " + target.BattleBehavior.Name);
+            target.BattleBehavior.RestoreHP(user, 100);
+            Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
         }
     }
 }

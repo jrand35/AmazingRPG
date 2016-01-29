@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class BattleMenu : MonoBehaviour {
     public event CharacterTurnHandler StartCharacterTurn;
     public Text CharacterName;
+    public Text DescriptionText;
     public Text[] Text;
     public IList<Battler> allCharacters { get; set; }
     public IList<Battler> allEnemies { get; set; }
@@ -246,7 +247,22 @@ public class BattleMenu : MonoBehaviour {
 
     void SpecialMenu()
     {
+        IList<Action> specialAbilities = currentCharacter.BattleBehavior.SpecialAbilities;
+        PrevMenu = CurrentMenu;
+        CurrentMenu = BattleMenuItem.Special;
 
+        listSize = specialAbilities.Count;
+        for (int i = 0; i < maxListSize; i++)
+        {
+            if (i >= listSize)
+            {
+                Text[i].text = "";
+            }
+            else
+            {
+                Text[i].text = specialAbilities[i].Name + " (" + specialAbilities[i].RequiredSP + ")";
+            }
+        }
     }
 
     void EnemyMenu()
@@ -369,6 +385,58 @@ public class BattleMenu : MonoBehaviour {
 
     void UpdateMenu()
     {
+        //Update description
+        switch (CurrentMenu)
+        {
+            case BattleMenuItem.Main:
+                switch (mainIndex)
+                {
+                    //Attack
+                    case 0:
+                        DescriptionText.text = "Attack with equipped weapon.";
+                        break;
+
+                    //Special
+                    case 1:
+                        DescriptionText.text = "Use a special ability.";
+                        break;
+
+                    //Item
+                    case 2:
+                        DescriptionText.text = "Use an item.";
+                        break;
+
+                    //Defend
+                    case 3:
+                        DescriptionText.text = "Reduce the amount of damage taken.";
+                        break;
+                }
+                break;
+
+            case BattleMenuItem.Enemy:
+                DescriptionText.text = "";
+                break;
+
+            case BattleMenuItem.Special:
+                DescriptionText.text = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex].Description;
+                break;
+
+            case BattleMenuItem.Item:
+                DescriptionText.text = currentCharacter.Inventory[itemIndex].Description;
+                break;
+
+            case BattleMenuItem.Player:
+                DescriptionText.text = "";
+                break;
+
+            case BattleMenuItem.AllPlayers:
+                DescriptionText.text = "";
+                break;
+
+            case BattleMenuItem.AllEnemies:
+                DescriptionText.text = "";
+                break;
+        }
         for (int i = 0; i < maxListSize; i++)
         {
             //See which menu the player is currently in
@@ -485,16 +553,31 @@ public class BattleMenu : MonoBehaviour {
                 {
                     break;
                 }
-                Item item = currentCharacter.Inventory[itemIndex];
-                CharacterTurnArgs itemArgs = new CharacterTurnArgs
+                if (PrevMenu == BattleMenuItem.Item)
                 {
-                    User = currentCharacter,
-                    Target = allCharacters[charIndex],
-                    ActionTarget = ActionTarget.PartyMember,
-                    ActionIndex = itemIndex,
-                    ActionType = ActionType.Item
-                };
-                OnCharacterTurn(itemArgs);
+                    Item item = currentCharacter.Inventory[itemIndex];
+                    CharacterTurnArgs itemArgs = new CharacterTurnArgs
+                    {
+                        User = currentCharacter,
+                        Target = allCharacters[charIndex],
+                        ActionTarget = ActionTarget.PartyMember,
+                        ActionIndex = itemIndex,
+                        ActionType = ActionType.Item
+                    };
+                    OnCharacterTurn(itemArgs);
+                }
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    CharacterTurnArgs args = new CharacterTurnArgs
+                    {
+                        User = currentCharacter,
+                        Target = allCharacters[charIndex],
+                        ActionTarget = ActionTarget.PartyMember,
+                        ActionIndex = specialIndex,
+                        ActionType = ActionType.Special
+                    };
+                    OnCharacterTurn(args);
+                }
                 cursorHover = false;
                 CharacterCursor.SetActive(false);
                 Finish();

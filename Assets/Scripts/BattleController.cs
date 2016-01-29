@@ -21,14 +21,16 @@ public class BattleController : MonoBehaviour {
 
 	void Start () {
         waitForCharacterTurn = false;
+        foreach (Battler b in Battlers)
+        {
+            b.Initialize();
+        }
 
         allCharacters = Battlers.Where(b => b.BattlerType == BattlerType.Character).ToList();
         allEnemies = Battlers.Where(b => b.BattlerType == BattlerType.Enemy).ToList();
         allBattlers = Battlers.OrderByDescending(b => b.BattleBehavior.Stats.Speed).ToList();
         BattleMenu.allCharacters = allCharacters;
         BattleMenu.allEnemies = allEnemies;
-
-        StartCoroutine(Run());
 
         //Create lifebars for each party member and attach them to the canvas
         Lifebars = new List<GameObject>(allCharacters.Count);
@@ -40,6 +42,7 @@ public class BattleController : MonoBehaviour {
             lifebar.GetComponent<Lifebar>().Character = allCharacters[i];
             Lifebars.Insert(i, lifebar);
         }
+        StartCoroutine(Run());
 	}
 
     void OnCharacterTurn(CharacterTurnArgs args)

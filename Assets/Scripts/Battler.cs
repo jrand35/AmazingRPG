@@ -10,6 +10,11 @@ public class Battler : MonoBehaviour
     public IList<Item> Inventory { get; private set; }
 	// Use this for initialization
 	void Start () {
+
+	}
+
+    public void Initialize()
+    {
         Inventory = new List<Item>();
         Inventory.Add(new PotionItem { Quantity = 5 });
         switch (BattlerID)
@@ -17,19 +22,22 @@ public class Battler : MonoBehaviour
             case BattlerID.Character1:
                 BattlerType = BattlerType.Character;
                 BattleBehavior = new Character1Behavior(this);
+                BattleBehavior.Initialize();
                 break;
 
             case BattlerID.Character2:
                 BattlerType = BattlerType.Character;
                 BattleBehavior = new Character2Behavior(this);
+                BattleBehavior.Initialize();
                 break;
 
             case BattlerID.Enemy:
                 BattlerType = BattlerType.Enemy;
                 BattleBehavior = new EnemyBehavior(this);
+                BattleBehavior.Initialize();
                 break;
         }
-	}
+    }
 
     //These two functions are used in BattleBehavior
     //public void RestoreHP(Battler user, int amount)

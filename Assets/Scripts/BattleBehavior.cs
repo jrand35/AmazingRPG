@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class BattleBehavior : MonoBehaviour {
+public abstract class BattleBehavior : MonoBehaviour {
     public event CharacterHPHandler HPChanged;
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
@@ -12,6 +12,8 @@ public class BattleBehavior : MonoBehaviour {
 	void Start () {
 	    
 	}
+
+    public abstract void Initialize();
 
     public virtual IEnumerator StandardAttack(Battler user, Battler target)
     {
