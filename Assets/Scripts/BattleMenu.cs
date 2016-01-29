@@ -165,7 +165,9 @@ public class BattleMenu : MonoBehaviour {
         MainMenu();
         UpdateMenu();
         UpdateCharacterName();
-        MagicCircle.transform.position = currentCharacter.transform.position + new Vector3(0f, -2f, 0f);
+        Vector3 circlePos = currentCharacter.transform.position;
+        circlePos.y = 0.25f;
+        MagicCircle.transform.position = circlePos;//= currentCharacter.transform.position + new Vector3(0f, -2f, 0f);
         StartCoroutine(SpinCircle());
         StartCoroutine(CursorHover());
     }
