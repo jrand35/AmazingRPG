@@ -5,9 +5,14 @@ using System.Collections.Generic;
 
 public class BattleMenu : MonoBehaviour {
     public event CharacterTurnHandler StartCharacterTurn;
+    public Text CharacterName;
     public Text[] Text;
     public IList<Battler> allCharacters { get; set; }
     public IList<Battler> allEnemies { get; set; }
+    public GameObject MagicCirclePrefab;
+    public GameObject CursorPrefab;
+    private GameObject MagicCircle;
+    private GameObject CharacterCursor;
     private BattleMenuItem CurrentMenu;
     private BattleMenuItem PrevMenu;
     private Battler currentCharacter;
@@ -18,6 +23,9 @@ public class BattleMenu : MonoBehaviour {
     private int enemyIndex;
     private int listSize;
     private int maxListSize = 4;
+    private float cursorY;
+    private bool cursorHover;
+    private bool onTurn;
 
     //The index of the current menu
     private int currentIndex
@@ -74,6 +82,14 @@ public class BattleMenu : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
+        onTurn = false;
+        cursorHover = false;
+        //Cursor position above character: 0, 2, 0
+        //Magic circle position at character: 0, -2, 0
+        CharacterCursor = Instantiate(CursorPrefab) as GameObject;
+        MagicCircle = Instantiate(MagicCirclePrefab) as GameObject;
+        MagicCircle.SetActive(false);
+        CharacterCursor.SetActive(false);
         mainIndex = 0;
         specialIndex = 0;
         itemIndex = 0;
@@ -84,8 +100,60 @@ public class BattleMenu : MonoBehaviour {
         UpdateMenu();
 	}
 
+    IEnumerator SpinCircle()
+    {
+        MagicCircle.SetActive(true);
+        Vector3 initScale = MagicCircle.transform.localScale;
+        Material MagicCircleMaterial = MagicCircle.GetComponent<MeshRenderer>().material;
+        float angle = 0f;
+        float alphaCount = 0f;
+        while (onTurn)
+        {
+            angle += 3f;
+            alphaCount += 0.05f; //0.1f;
+            float alpha = 0.4f + 0.2f * Mathf.Cos(alphaCount);
+            Vector3 scale = initScale + (initScale * -0.15f * Mathf.Cos(alphaCount));
+            MagicCircle.transform.localScale = scale;
+            MagicCircle.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            MagicCircleMaterial.SetColor("_TintColor", new Color(1f, 1f, 1f, alpha));
+            yield return 0;
+        }
+        MagicCircle.SetActive(false);
+    }
+
+    IEnumerator CursorHover()
+    {
+        float time = 0;
+        while (onTurn)
+        {
+            if (cursorHover)
+            {
+                time += 0.1f;
+                cursorY = 0.5f * Mathf.Sin(time);
+                Battler selected = null;
+                if (CurrentMenu == BattleMenuItem.Player)
+                {
+                    selected = allCharacters[charIndex];
+                }
+                else if (CurrentMenu == BattleMenuItem.Enemy)
+                {
+                    selected = allEnemies[enemyIndex];
+                }
+                CharacterCursor.transform.localPosition = selected.gameObject.transform.position + new Vector3(0f, 2f + cursorY, 0f);
+            }
+            else
+            {
+                time = 0;
+            }
+            yield return 0;
+        }
+        //while(gameObject.)
+    }
+
     public void CharacterTurn(Battler character)
     {
+        onTurn = true;
+        cursorHover = false;
         gameObject.SetActive(true);
         currentCharacter = character;
         mainIndex = 0;
@@ -95,6 +163,60 @@ public class BattleMenu : MonoBehaviour {
         enemyIndex = 0;
         MainMenu();
         UpdateMenu();
+        UpdateCharacterName();
+        MagicCircle.transform.position = currentCharacter.transform.position + new Vector3(0f, -2f, 0f);
+        StartCoroutine(SpinCircle());
+        StartCoroutine(CursorHover());
+    }
+
+    void UpdateCharacterName()
+    {
+        switch (CurrentMenu)
+        {
+            case BattleMenuItem.Main:
+                CharacterName.text = currentCharacter.BattleBehavior.Name;
+                break;
+
+            case BattleMenuItem.Enemy:
+                //Using a normal attack
+                if (PrevMenu == BattleMenuItem.Main)
+                {
+                    CharacterName.text = currentCharacter.BattleBehavior.Name + " > Attack";
+                }
+                //Using a special attack
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    CharacterName.text = currentCharacter.BattleBehavior.Name + " > Special > " + currentCharacter.BattleBehavior.SpecialAbilities[specialIndex].Name;
+                }
+                break;
+
+            case BattleMenuItem.Special:
+                CharacterName.text = currentCharacter.BattleBehavior.Name + " > Special";
+                break;
+
+            case BattleMenuItem.Item:
+                CharacterName.text = currentCharacter.BattleBehavior.Name + " > Item";
+                break;
+
+            case BattleMenuItem.Player:
+                //Using an item
+                if (PrevMenu == BattleMenuItem.Item)
+                {
+                    CharacterName.text = currentCharacter.BattleBehavior.Name + " > Item > " + currentCharacter.Inventory[itemIndex].Name;
+                }
+                //Using a special healing ability
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    CharacterName.text = currentCharacter.BattleBehavior.Name + " > Special > " + currentCharacter.BattleBehavior.SpecialAbilities[specialIndex].Name;
+                }
+                break;
+
+            case BattleMenuItem.AllPlayers:
+                break;
+
+            case BattleMenuItem.AllEnemies:
+                break;
+        }
     }
 
     void MainMenu()
@@ -129,8 +251,11 @@ public class BattleMenu : MonoBehaviour {
 
     void EnemyMenu()
     {
+        cursorHover = true;
+        CharacterCursor.SetActive(true);
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Enemy;
+        MoveCursor(allEnemies[enemyIndex]);
         //If choosing an enemy to attack with a special attack
         switch (PrevMenu)
         {
@@ -215,11 +340,19 @@ public class BattleMenu : MonoBehaviour {
         }
     }
 
+    void MoveCursor(Battler character)
+    {
+        CharacterCursor.transform.localPosition = character.gameObject.transform.localPosition + new Vector3(0f, 2f + cursorY, 0f);
+    }
+
     void CharacterMenu()
     {
+        cursorHover = true;
+        CharacterCursor.SetActive(true);
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Player;
         listSize = allCharacters.Count;
+        MoveCursor(allCharacters[charIndex]);
 
         for (int i = 0; i < maxListSize; i++)
         {
@@ -247,6 +380,11 @@ public class BattleMenu : MonoBehaviour {
             {
                 Text[i].color = new Color(0.5f, 0.5f, 0.5f);
             }
+        }
+
+        if (CurrentMenu == BattleMenuItem.Player)
+        {
+            MoveCursor(allCharacters[charIndex]);
         }
     }
 
@@ -311,6 +449,8 @@ public class BattleMenu : MonoBehaviour {
                     OnCharacterTurn(args);
                     Finish();
                 }
+                cursorHover = false;
+                CharacterCursor.SetActive(false);
                 break;
 
             //Choose a special attack
@@ -355,6 +495,8 @@ public class BattleMenu : MonoBehaviour {
                     ActionType = ActionType.Item
                 };
                 OnCharacterTurn(itemArgs);
+                cursorHover = false;
+                CharacterCursor.SetActive(false);
                 Finish();
                 break;
 
@@ -394,6 +536,7 @@ public class BattleMenu : MonoBehaviour {
                 break;
         }
         UpdateMenu();
+        UpdateCharacterName();
     }
 
     void OnCharacterTurn(CharacterTurnArgs args)
@@ -420,6 +563,8 @@ public class BattleMenu : MonoBehaviour {
                 {
                     SpecialMenu();
                 }
+                cursorHover = false;
+                CharacterCursor.SetActive(false);
                 break;
 
             case BattleMenuItem.Special:
@@ -439,6 +584,8 @@ public class BattleMenu : MonoBehaviour {
                 {
                     SpecialMenu();
                 }
+                cursorHover = false;
+                CharacterCursor.SetActive(false);
                 break;
 
             case BattleMenuItem.AllPlayers:
@@ -448,10 +595,13 @@ public class BattleMenu : MonoBehaviour {
                 break;
         }
         UpdateMenu();
+        UpdateCharacterName();
     }
 
     void Finish()
     {
+        onTurn = false;
+        MagicCircle.SetActive(false);
         gameObject.SetActive(false);
     }
 	

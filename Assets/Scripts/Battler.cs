@@ -14,9 +14,14 @@ public class Battler : MonoBehaviour
         Inventory.Add(new PotionItem { Quantity = 5 });
         switch (BattlerID)
         {
-            case BattlerID.Character:
+            case BattlerID.Character1:
                 BattlerType = BattlerType.Character;
-                BattleBehavior = new CharacterBehavior(this);
+                BattleBehavior = new Character1Behavior(this);
+                break;
+
+            case BattlerID.Character2:
+                BattlerType = BattlerType.Character;
+                BattleBehavior = new Character2Behavior(this);
                 break;
 
             case BattlerID.Enemy:

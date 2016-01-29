@@ -2,6 +2,7 @@
 using System.Collections;
 
 public enum BattlerID {
-    Character = 0,
+    Character1 = 0,
+    Character2,
     Enemy
 }

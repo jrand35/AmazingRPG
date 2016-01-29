@@ -7,27 +7,39 @@ using System.Linq;
 public class BattleController : MonoBehaviour {
     public Lifebar lifebar;
     public BattleMenu BattleMenu;
-    public GameObject MagicCircle;
+    public GameObject Canvas;
+    public GameObject LifebarPrefab;
     public Text text;
     public Battler[] Battlers;
+    private IList<GameObject> Lifebars;
     private IList<Battler> allCharacters;
     private IList<Battler> allEnemies;
+    private IList<Battler> allBattlers;
     private Material MagicCircleMaterial;
     private CharacterTurnArgs charTurnArgs;
     private bool waitForCharacterTurn;
 
 	void Start () {
         waitForCharacterTurn = false;
-        StartCoroutine(Run());
-        MagicCircleMaterial = MagicCircle.GetComponent<MeshRenderer>().material;
-        StartCoroutine(SpinCircle());
 
         allCharacters = Battlers.Where(b => b.BattlerType == BattlerType.Character).ToList();
         allEnemies = Battlers.Where(b => b.BattlerType == BattlerType.Enemy).ToList();
+        allBattlers = Battlers.OrderByDescending(b => b.BattleBehavior.Stats.Speed).ToList();
         BattleMenu.allCharacters = allCharacters;
         BattleMenu.allEnemies = allEnemies;
 
-        lifebar.Character = allCharacters[0];
+        StartCoroutine(Run());
+
+        //Create lifebars for each party member and attach them to the canvas
+        Lifebars = new List<GameObject>(allCharacters.Count);
+        for (int i = 0; i < allCharacters.Count; i++)
+        {
+            GameObject lifebar = Instantiate(LifebarPrefab) as GameObject;
+            lifebar.gameObject.transform.parent = Canvas.transform;
+            lifebar.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(20f, -20f - 55f * i);
+            lifebar.GetComponent<Lifebar>().Character = allCharacters[i];
+            Lifebars.Insert(i, lifebar);
+        }
 	}
 
     void OnCharacterTurn(CharacterTurnArgs args)
@@ -44,24 +56,6 @@ public class BattleController : MonoBehaviour {
     void OnDisable()
     {
         BattleMenu.StartCharacterTurn -= OnCharacterTurn;
-    }
-
-    IEnumerator SpinCircle()
-    {
-        Vector3 initScale = MagicCircle.transform.localScale;
-        float angle = 0f;
-        float alphaCount = 0f;
-        while (true)
-        {
-            angle += 3f;
-            alphaCount += 0.05f; //0.1f;
-            float alpha = 0.4f + 0.2f * Mathf.Cos(alphaCount);
-            Vector3 scale = initScale + (initScale * -0.15f * Mathf.Cos(alphaCount));
-            MagicCircle.transform.localScale = scale;
-            MagicCircle.transform.rotation = Quaternion.Euler(0f, angle, 0f);
-            MagicCircleMaterial.SetColor("_TintColor", new Color(1f, 1f, 1f, alpha));
-            yield return 0;
-        }
     }
 	
 	void Update () {
@@ -93,7 +87,7 @@ public class BattleController : MonoBehaviour {
     {
         while (true)
         {
-            foreach (Battler battler in Battlers)
+            foreach (Battler battler in allBattlers)
             {
                 if (battler.BattlerType == BattlerType.Character)
                 {
