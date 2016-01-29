@@ -27,6 +27,7 @@ public class Character1Behavior : BattleBehavior
         };
         SpecialAbilities = new List<Action>();
         SpecialAbilities.Add(new Restore(this));
+        SpecialAbilities.Add(new ShootingStars(this));
     }
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
@@ -57,6 +58,80 @@ public class Character1Behavior : BattleBehavior
             yield return new WaitForSeconds(1f);
             target.BattleBehavior.RestoreHP(user, 100);
             Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
+        }
+    }
+
+    class ShootingStars : Action
+    {
+        int dimDuration = 30;
+        float minDim = 0.1f;
+        int starCount = 15;
+        GameObject StarPrefab;
+        Light light;
+        public ShootingStars(BattleBehavior parent)
+        {
+            BattleBehavior = parent;
+            Name = "Shooting Stars";
+            Description = "Attack all enemies with a barrage of stars.";
+            RequiredSP = 25;
+            Power = 2;
+            ActionTarget = ActionTarget.Enemy;  //Change
+            light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
+            StarPrefab = Resources.Load<GameObject>("Star");
+        }
+
+        IEnumerator Dim()
+        {
+            for (int i = 0; i < dimDuration; i++)
+            {
+                light.intensity = 1f - (1f - minDim) * ((float)(i + 1) / dimDuration);
+                yield return 0;
+            }
+            light.intensity = minDim;
+        }
+
+        IEnumerator Brighten()
+        {
+            for (int i = 0; i < dimDuration; i++)
+            {
+                light.intensity = minDim + (1f - minDim) * ((float)(i + 1) / dimDuration);
+                yield return 0;
+            }
+            light.intensity = 1f;
+        }
+
+        void CreateStar(Battler user, Battler target)
+        {
+            Vector3 starPos = user.gameObject.transform.position;
+            starPos.x -= 20f;
+            starPos.y = 20f;
+            starPos.z += Random.Range(-20f, 20f);
+            Vector3 targetPos = target.gameObject.transform.position;
+            targetPos.z = starPos.z;
+            Quaternion angle = Quaternion.Euler(0f, 180f, 0f);
+            GameObject star = Instantiate(StarPrefab, starPos, angle) as GameObject;
+            Material starMaterial = star.GetComponent<MeshRenderer>().material;
+            //Changes color to blue
+            starMaterial.SetColor("_EmissionColor", new Color(0f, 0f, 1.1f));
+            Rigidbody rb = star.GetComponent<Rigidbody>();
+            var heading = targetPos - starPos;
+            var distance = heading.magnitude;
+            var direction = heading / distance;
+            rb.AddForce(direction * 1200f);
+        }
+
+        public override IEnumerator Run(Battler user, Battler target)
+        {
+            Light light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
+            yield return new WaitForSeconds(0.3f);
+            yield return Dim();
+            for (int i = 0; i < starCount; i++)
+            {
+                CreateStar(user, target);
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return new WaitForSeconds(5f);
+            yield return Brighten();
         }
     }
 }
