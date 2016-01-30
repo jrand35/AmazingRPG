@@ -9,4 +9,12 @@ public abstract class Item : MonoBehaviour {
     {
 
     }
+    public void RemoveFromInventory(Battler user)
+    {
+        Quantity--;
+        if (Quantity <= 0)
+        {
+            user.Inventory.Remove(this);
+        }
+    }
 }

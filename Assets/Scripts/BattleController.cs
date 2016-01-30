@@ -74,10 +74,12 @@ public class BattleController : MonoBehaviour {
                 break;
 
             case ActionType.Special:
+                user.BattleBehavior.SpecialAbilities[index].UseSP(user);
                 yield return user.BattleBehavior.SpecialAbilities[index].Run(user, target);
                 break;
 
             case ActionType.Item:
+                user.Inventory[index].RemoveFromInventory(user);
                 user.Inventory[index].Use(user, target);
                 break;
 

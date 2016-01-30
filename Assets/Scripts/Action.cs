@@ -16,4 +16,9 @@ public abstract class Action : MonoBehaviour {
         }
     }
     public abstract IEnumerator Run(Battler user, Battler target);
+    //Implement a BattleBehavior.UseSP function
+    public void UseSP(Battler user)
+    {
+        user.BattleBehavior.Stats.CurrentSP -= RequiredSP;
+    }
 }

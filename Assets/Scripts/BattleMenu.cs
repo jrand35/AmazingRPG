@@ -24,6 +24,7 @@ public class BattleMenu : MonoBehaviour {
     private int enemyIndex;
     private int listSize;
     private int maxListSize = 4;
+    private Vector3 magicCircleInitScale;
     private float cursorY;
     private bool cursorHover;
     private bool onTurn;
@@ -83,6 +84,7 @@ public class BattleMenu : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
+        Camera.main.hdr = false;
         onTurn = false;
         cursorHover = false;
         //Cursor position above character: 0, 2, 0
@@ -91,6 +93,7 @@ public class BattleMenu : MonoBehaviour {
         MagicCircle = Instantiate(MagicCirclePrefab) as GameObject;
         MagicCircle.SetActive(false);
         CharacterCursor.SetActive(false);
+        magicCircleInitScale = MagicCircle.transform.localScale;
         mainIndex = 0;
         specialIndex = 0;
         itemIndex = 0;
@@ -104,7 +107,6 @@ public class BattleMenu : MonoBehaviour {
     IEnumerator SpinCircle()
     {
         MagicCircle.SetActive(true);
-        Vector3 initScale = MagicCircle.transform.localScale;
         Material MagicCircleMaterial = MagicCircle.GetComponent<MeshRenderer>().material;
         float angle = 0f;
         float alphaCount = 0f;
@@ -113,7 +115,7 @@ public class BattleMenu : MonoBehaviour {
             angle += 3f;
             alphaCount += 0.05f; //0.1f;
             float alpha = 0.4f + 0.2f * Mathf.Cos(alphaCount);
-            Vector3 scale = initScale + (initScale * -0.15f * Mathf.Cos(alphaCount));
+            Vector3 scale = magicCircleInitScale + (magicCircleInitScale * -0.15f * Mathf.Cos(alphaCount));
             MagicCircle.transform.localScale = scale;
             MagicCircle.transform.rotation = Quaternion.Euler(0f, angle, 0f);
             MagicCircleMaterial.SetColor("_TintColor", new Color(1f, 1f, 1f, alpha));

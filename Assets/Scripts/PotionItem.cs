@@ -11,10 +11,5 @@ public class PotionItem : Item {
     public override void Use(Battler user, Battler recipient)
     {
         recipient.BattleBehavior.RestoreHP(user, 50);
-        Quantity--;
-        if (Quantity <= 0)
-        {
-            user.Inventory.Remove(this);
-        }
     }
 }

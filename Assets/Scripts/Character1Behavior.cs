@@ -102,6 +102,9 @@ public class Character1Behavior : BattleBehavior
 
         void CreateStar(Battler user, Battler target)
         {
+            float hue = Random.Range(0f, 1f);
+            Color color = Color.HSVToRGB(hue, 1f, 1f);
+            color *= 1.1f;
             Vector3 starPos = user.gameObject.transform.position;
             starPos.x -= 20f;
             starPos.y = 20f;
@@ -112,16 +115,18 @@ public class Character1Behavior : BattleBehavior
             GameObject star = Instantiate(StarPrefab, starPos, angle) as GameObject;
             Material starMaterial = star.GetComponent<MeshRenderer>().material;
             //Changes color to blue
-            starMaterial.SetColor("_EmissionColor", new Color(0f, 0f, 1.1f));
+            starMaterial.SetColor("_EmissionColor", color);//new Color(0f, 0f, 1.2f));
             Rigidbody rb = star.GetComponent<Rigidbody>();
             var heading = targetPos - starPos;
             var distance = heading.magnitude;
             var direction = heading / distance;
-            rb.AddForce(direction * 1200f);
+            rb.AddForce(direction * 1500f);
+            Destroy(star, 5f);
         }
 
         public override IEnumerator Run(Battler user, Battler target)
         {
+            Camera.main.hdr = true;
             Light light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
             yield return new WaitForSeconds(0.3f);
             yield return Dim();
@@ -130,8 +135,12 @@ public class Character1Behavior : BattleBehavior
                 CreateStar(user, target);
                 yield return new WaitForSeconds(0.1f);
             }
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(3f);
+            int baseDamage = (int)((user.BattleBehavior.Stats.SpAttack * 4 * Power) - (target.BattleBehavior.Stats.SpDefense * 2));
+            baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
+            target.BattleBehavior.TakeDamage(user, baseDamage);
             yield return Brighten();
+            Camera.main.hdr = false;
         }
     }
 }
