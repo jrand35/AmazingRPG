@@ -84,19 +84,25 @@ public class BattleController : MonoBehaviour {
                 break;
 
             case ActionType.Defend:
+                user.BattleBehavior.Defending = true;
                 break;
         }
     }
 
     IEnumerator Run()
     {
+        float alpha = 0f;
+        int count = 0;
         while (true)
         {
+            count++;
+            alpha = 0.5f;
             foreach (Battler battler in allBattlers)
             {
                 if (battler.BattlerType == BattlerType.Character)
                 {
                     waitForCharacterTurn = true;
+                    battler.BattleBehavior.Defending = false;
                     BattleMenu.CharacterTurn(battler);
                     while (waitForCharacterTurn)
                     {

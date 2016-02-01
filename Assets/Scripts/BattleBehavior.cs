@@ -7,6 +7,7 @@ public abstract class BattleBehavior : MonoBehaviour {
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
     public IList<Action> SpecialAbilities { get; protected set; }
+    public bool Defending { get; set; }
     protected Battler Battler { get; set; }
 	// Use this for initialization
 	void Start () {
@@ -22,7 +23,11 @@ public abstract class BattleBehavior : MonoBehaviour {
 
     public virtual void TakeDamage(Battler user, int baseDamage)
     {
-        //Debug.Log("Took damage" + baseDamage.ToString());
+        if (Defending)
+        {
+            baseDamage /= 2;
+        }
+        Debug.Log("Took damage " + baseDamage.ToString());
         Stats.CurrentHP -= baseDamage;
         if (Stats.CurrentHP < 0)
         {

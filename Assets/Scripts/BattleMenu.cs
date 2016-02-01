@@ -498,6 +498,16 @@ public class BattleMenu : MonoBehaviour {
 
                     //Defend
                     case 3:
+                        CharacterTurnArgs defendArgs = new CharacterTurnArgs
+                        {
+                            User = currentCharacter,
+                            Target = null,
+                            ActionTarget = ActionTarget.PartyMember,
+                            ActionIndex = 0,
+                            ActionType = ActionType.Defend
+                        };
+                        OnCharacterTurn(defendArgs);
+                        Finish();
                         break;
                 }
                 break;
