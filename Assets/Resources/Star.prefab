@@ -13,6 +13,7 @@ GameObject:
   - 95: {fileID: 9561410}
   - 54: {fileID: 5451638}
   - 135: {fileID: 13579242}
+  - 114: {fileID: 11462942}
   m_Layer: 8
   m_Name: Star
   m_TagString: Untagged
@@ -97,6 +98,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11462942
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 178998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218fb9803fb799c4f820e0e836c7727c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &13579242
 SphereCollider:
   m_ObjectHideFlags: 1
