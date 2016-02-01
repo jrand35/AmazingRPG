@@ -135,4 +135,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
+        second: {r: 0.60784316, g: 0.60784316, b: 0.60784316, a: 1}

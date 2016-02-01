@@ -110,6 +110,17 @@ public class BattleMenu : MonoBehaviour {
         Material MagicCircleMaterial = MagicCircle.GetComponent<MeshRenderer>().material;
         float angle = 0f;
         float alphaCount = 0f;
+        for (int i = 0; i < 25; i++)
+        {
+            angle += 3f;
+            Vector3 targetScale = magicCircleInitScale * 0.85f;
+            Vector3 scale = magicCircleInitScale + (targetScale - magicCircleInitScale * (i / 25f));
+            MagicCircle.transform.localScale = scale;
+            MagicCircle.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            float alpha = 0.6f * (i / 25f);
+            MagicCircleMaterial.SetColor("_TintColor", new Color(1f, 1f, 1f, alpha));
+            yield return 0;
+        }
         while (onTurn)
         {
             angle += 3f;
