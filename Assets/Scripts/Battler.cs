@@ -8,6 +8,7 @@ public class Battler : MonoBehaviour
     public BattlerType BattlerType { get; private set; }
     public BattleBehavior BattleBehavior { get; private set; }
     public IList<Item> Inventory { get; private set; }
+    public int BattlerIndex { get; set; }
 	// Use this for initialization
 	void Start () {
 
