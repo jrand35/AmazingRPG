@@ -5,26 +5,38 @@ public static class Move {
     private static int moveDuration = 50;
     public static IEnumerator MoveInFrontOfBattler(Battler user, Battler target, Vector3 startPos)
     {
+        Quaternion startRotation = user.transform.rotation;
         Vector3 targetPos = target.gameObject.transform.position + new Vector3(-2f, 0f, 0f);
         targetPos.y = startPos.y;
+        var heading = targetPos - startPos;
+        var distance = heading.magnitude;
+        var direction = heading / distance;
+        user.transform.rotation = Quaternion.LookRotation(direction);
         for (int i = 0; i < moveDuration; i++)
         {
             Vector3 newPos = startPos + (targetPos - startPos) * (float)i / moveDuration;
             user.gameObject.transform.position = newPos;
             yield return 0;
         }
+        user.transform.rotation = startRotation;
         user.transform.position = targetPos;
     }
     public static IEnumerator MoveBackFromBattler(Battler user, Battler target, Vector3 startPos)
     {
+        Quaternion startRotation = user.transform.rotation;
         Vector3 targetPos = target.gameObject.transform.position + new Vector3(-2f, 0f, 0f);
         targetPos.y = startPos.y;
+        var heading = startPos - targetPos;
+        var distance = heading.magnitude;
+        var direction = heading / distance;
+        user.transform.rotation = Quaternion.LookRotation(direction);
         for (int i = 0; i < moveDuration; i++)
         {
             Vector3 newPos = targetPos + (startPos - targetPos) * (float)i / moveDuration;
             user.gameObject.transform.position = newPos;
             yield return 0;
         }
+        user.transform.rotation = startRotation;
         user.transform.position = startPos;
     }
 

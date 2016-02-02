@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Character2Behavior : BattleBehavior
 {
+    public Animator anim;
     public Character2Behavior(Battler parent)
     {
         Battler = parent;
@@ -11,6 +12,7 @@ public class Character2Behavior : BattleBehavior
 
     public override void Initialize()
     {
+        anim = Battler.GetComponent<Animator>();
         Name = "Steve";
         Stats = new Stats
         {
@@ -31,13 +33,19 @@ public class Character2Behavior : BattleBehavior
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
     {
+        Animator anim = user.GetComponent<Animator>();
         Vector3 startPos = user.gameObject.transform.position;
+        anim.SetInteger("State", 1);
+        Debug.Log(anim.GetInteger("State"));
         yield return Move.MoveInFrontOfBattler(user, target, startPos);
+        anim.SetInteger("State", 0);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.5f);
+        anim.SetInteger("State", 1);
         yield return Move.MoveBackFromBattler(user, target, startPos);
+        anim.SetInteger("State", 0);
     }
 
     class Restore : Action

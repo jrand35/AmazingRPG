@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public abstract class BattleBehavior : MonoBehaviour {
+    public static event HPTextHandler HPText;
     public event CharacterHPHandler HPChanged;
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
@@ -11,7 +12,6 @@ public abstract class BattleBehavior : MonoBehaviour {
     protected Battler Battler { get; set; }
 	// Use this for initialization
 	void Start () {
-	    
 	}
 
     public abstract void Initialize();
@@ -37,6 +37,10 @@ public abstract class BattleBehavior : MonoBehaviour {
         {
             HPChanged(Stats.CurrentHP, Stats.MaxHP);
         }
+        if (HPText != null)
+        {
+            HPText(Battler, -baseDamage);
+        }
     }
 
     public virtual void RestoreHP(Battler user, int amount)
@@ -50,6 +54,10 @@ public abstract class BattleBehavior : MonoBehaviour {
         if (HPChanged != null)
         {
             HPChanged(Stats.CurrentHP, Stats.MaxHP);
+        }
+        if (HPText != null)
+        {
+            HPText(Battler, amount);
         }
     }
 	

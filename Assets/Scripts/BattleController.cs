@@ -10,6 +10,7 @@ public class BattleController : MonoBehaviour {
     public GameObject Canvas;
     public GameObject LifebarPrefab;
     public GameObject ShieldPrefab;
+    public GameObject DamageNumberPrefab;
     public Text text;
     public Battler[] Battlers;
     private IList<GameObject> Lifebars;
@@ -68,11 +69,29 @@ public class BattleController : MonoBehaviour {
     void OnEnable()
     {
         BattleMenu.StartCharacterTurn += OnCharacterTurn;
+        BattleBehavior.HPText += HPText;
     }
 
     void OnDisable()
     {
         BattleMenu.StartCharacterTurn -= OnCharacterTurn;
+        BattleBehavior.HPText -= HPText;
+    }
+
+    void HPText(Battler battler, int dHealth)
+    {
+        
+        Vector3 position = Camera.main.WorldToScreenPoint(battler.gameObject.transform.position);
+        position.y += 30f;
+        GameObject num = Instantiate(DamageNumberPrefab) as GameObject;
+        num.transform.SetParent(Canvas.transform);
+        num.transform.position = position;
+        DamageNumber dn = num.GetComponent<DamageNumber>();
+        dn.Damage = Mathf.Abs(dHealth);
+        if (dHealth > 0)
+        {
+            dn.Color = Color.green;
+        }
     }
 	
 	void Update () {
