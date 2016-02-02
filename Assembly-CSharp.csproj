@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Character1Behavior.cs" />
      <Compile Include="Assets\Scripts\Character2Behavior.cs" />
      <Compile Include="Assets\Scripts\CharacterTurnArgs.cs" />
+     <Compile Include="Assets\Scripts\DamageNumber.cs" />
      <Compile Include="Assets\Scripts\EnemyBehavior.cs" />
      <Compile Include="Assets\Scripts\EventHandlers.cs" />
      <Compile Include="Assets\Scripts\Item.cs" />

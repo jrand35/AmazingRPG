@@ -36,7 +36,6 @@ public class Character2Behavior : BattleBehavior
         Animator anim = user.GetComponent<Animator>();
         Vector3 startPos = user.gameObject.transform.position;
         anim.SetInteger("State", 1);
-        Debug.Log(anim.GetInteger("State"));
         yield return Move.MoveInFrontOfBattler(user, target, startPos);
         anim.SetInteger("State", 0);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
