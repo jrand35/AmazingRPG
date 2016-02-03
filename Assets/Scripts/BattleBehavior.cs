@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public abstract class BattleBehavior : MonoBehaviour {
     public static event HPTextHandler HPText;
+    public static event SpecialEffectsHandler SpecialEffects;
     public event CharacterHPHandler HPChanged;
     public string Name { get; protected set; }
     public Stats Stats { get; set; }

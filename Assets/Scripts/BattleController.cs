@@ -11,6 +11,7 @@ public class BattleController : MonoBehaviour {
     public GameObject LifebarPrefab;
     public GameObject ShieldPrefab;
     public GameObject DamageNumberPrefab;
+    public GameObject RestoreParticlesPrefab;
     public Text text;
     public Battler[] Battlers;
     private IList<GameObject> Lifebars;
