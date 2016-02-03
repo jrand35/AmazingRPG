@@ -155,7 +155,8 @@ public class BattleController : MonoBehaviour {
                 }
                 else
                 {
-                    yield return battler.BattleBehavior.StandardAttack(allEnemies[0], allCharacters[0]);
+                    battler.BattleBehavior.ChooseTarget(allCharacters);
+                    yield return battler.BattleBehavior.StandardAttack(battler, null);
                 }
             }
             //battlerIndex++;

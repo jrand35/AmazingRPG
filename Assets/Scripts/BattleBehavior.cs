@@ -10,11 +10,19 @@ public abstract class BattleBehavior : MonoBehaviour {
     public IList<Action> SpecialAbilities { get; protected set; }
     public bool Defending { get; set; }
     protected Battler Battler { get; set; }
+    //For letting an enemy choose a random target
+    protected Battler Target { get; set; }
 	// Use this for initialization
 	void Start () {
 	}
 
     public abstract void Initialize();
+
+    //Used by enemies
+    public virtual void ChooseTarget(IList<Battler> battlers)
+    {
+
+    }
 
     public virtual IEnumerator StandardAttack(Battler user, Battler target)
     {

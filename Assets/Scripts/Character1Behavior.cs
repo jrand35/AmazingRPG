@@ -33,12 +33,12 @@ public class Character1Behavior : BattleBehavior
     public override IEnumerator StandardAttack(Battler user, Battler target)
     {
         Vector3 startPos = user.gameObject.transform.position;
-        yield return Move.MoveInFrontOfBattler(user, target, startPos);
+        yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
         int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.5f);
-        yield return Move.MoveBackFromBattler(user, target, startPos);
+        yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
     }
 
     class Restore : Action

@@ -3,10 +3,10 @@ using System.Collections;
 
 public static class Move {
     private static int moveDuration = 50;
-    public static IEnumerator MoveInFrontOfBattler(Battler user, Battler target, Vector3 startPos)
+    public static IEnumerator MoveInFrontOfBattler(Battler user, Battler target, Vector3 startPos, Vector3 offset)
     {
         Quaternion startRotation = user.transform.rotation;
-        Vector3 targetPos = target.gameObject.transform.position + new Vector3(-2f, 0f, 0f);
+        Vector3 targetPos = target.gameObject.transform.position + offset;
         targetPos.y = startPos.y;
         var heading = targetPos - startPos;
         var distance = heading.magnitude;
@@ -21,10 +21,10 @@ public static class Move {
         user.transform.rotation = startRotation;
         user.transform.position = targetPos;
     }
-    public static IEnumerator MoveBackFromBattler(Battler user, Battler target, Vector3 startPos)
+    public static IEnumerator MoveBackFromBattler(Battler user, Battler target, Vector3 startPos, Vector3 offset)
     {
         Quaternion startRotation = user.transform.rotation;
-        Vector3 targetPos = target.gameObject.transform.position + new Vector3(-2f, 0f, 0f);
+        Vector3 targetPos = target.gameObject.transform.position + offset;
         targetPos.y = startPos.y;
         var heading = startPos - targetPos;
         var distance = heading.magnitude;

@@ -32,9 +32,9 @@ public class Battler : MonoBehaviour
                 BattleBehavior.Initialize();
                 break;
 
-            case BattlerID.Enemy:
+            case BattlerID.Rat:
                 BattlerType = BattlerType.Enemy;
-                BattleBehavior = new EnemyBehavior(this);
+                BattleBehavior = new RatBehavior(this);
                 BattleBehavior.Initialize();
                 break;
         }

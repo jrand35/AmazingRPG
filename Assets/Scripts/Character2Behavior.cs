@@ -36,14 +36,15 @@ public class Character2Behavior : BattleBehavior
         Animator anim = user.GetComponent<Animator>();
         Vector3 startPos = user.gameObject.transform.position;
         anim.SetInteger("State", 1);
-        yield return Move.MoveInFrontOfBattler(user, target, startPos);
-        anim.SetInteger("State", 0);
+        yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
+        anim.SetInteger("State", 2);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
+        yield return new WaitForSeconds(0.5f);
         target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.5f);
         anim.SetInteger("State", 1);
-        yield return Move.MoveBackFromBattler(user, target, startPos);
+        yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
         anim.SetInteger("State", 0);
     }
 
