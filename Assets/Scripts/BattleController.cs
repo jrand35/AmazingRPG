@@ -159,6 +159,13 @@ public class BattleController : MonoBehaviour {
                     battler.BattleBehavior.ChooseTarget(allCharacters);
                     yield return battler.BattleBehavior.StandardAttack(battler, null);
                 }
+                foreach (Battler enemy in allEnemies)
+                {
+                    if (enemy.BattleBehavior.Stats.CurrentHP <= 0)
+                    {
+                        yield return enemy.BattleBehavior.EnemyDie();
+                    }
+                }
             }
             //battlerIndex++;
             yield return 0;

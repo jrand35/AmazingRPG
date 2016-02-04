@@ -25,6 +25,31 @@ public abstract class BattleBehavior : MonoBehaviour {
 
     }
 
+    public virtual IEnumerator EnemyDie()
+    {
+        Renderer r = Battler.GetComponentInChildren<Renderer>();
+        Color startColor = r.material.color;
+        Color currentColor = startColor;
+        int duration = 55;
+        SpecialEffectsManager.DeathParticles(Battler);
+        //All of this is necessary just to fade out the object...
+        r.material.SetFloat("_Mode", 3);
+        r.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        r.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        r.material.SetInt("_ZWrite", 0);
+        r.material.DisableKeyword("_ALPHATEST_ON");
+        r.material.DisableKeyword("_ALPHABLEND_ON");
+        r.material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+        r.material.renderQueue = 3000;
+        for (int i = 1; i <= duration; i++)
+        {
+            currentColor.a = startColor.a * (1f - ((float)i / duration));
+            //Fix
+            r.material.color = currentColor;
+            yield return 0;
+        }
+    }
+
     public virtual IEnumerator StandardAttack(Battler user, Battler target)
     {
         yield return 0;
