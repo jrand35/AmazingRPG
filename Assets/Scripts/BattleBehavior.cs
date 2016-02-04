@@ -9,7 +9,7 @@ public abstract class BattleBehavior : MonoBehaviour {
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
     public IList<Action> SpecialAbilities { get; protected set; }
-    public bool Defending { get; set; }
+    public virtual bool Defending { get; set; }
     protected Battler Battler { get; set; }
     //For letting an enemy choose a random target
     protected Battler Target { get; set; }

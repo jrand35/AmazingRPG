@@ -88,12 +88,12 @@
     <Compile Include="Assets\Scripts\Character2Behavior.cs" />
     <Compile Include="Assets\Scripts\CharacterTurnArgs.cs" />
     <Compile Include="Assets\Scripts\DamageNumber.cs" />
-    <Compile Include="Assets\Scripts\EnemyBehavior.cs" />
     <Compile Include="Assets\Scripts\EventHandlers.cs" />
     <Compile Include="Assets\Scripts\Item.cs" />
     <Compile Include="Assets\Scripts\Lifebar.cs" />
     <Compile Include="Assets\Scripts\Move.cs" />
     <Compile Include="Assets\Scripts\PotionItem.cs" />
+    <Compile Include="Assets\Scripts\RatBehavior.cs" />
     <Compile Include="Assets\Scripts\Shield.cs" />
     <Compile Include="Assets\Scripts\Star.cs" />
     <Compile Include="Assets\Scripts\Stats.cs" />

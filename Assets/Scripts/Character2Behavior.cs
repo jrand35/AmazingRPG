@@ -4,14 +4,29 @@ using System.Collections.Generic;
 
 public class Character2Behavior : BattleBehavior
 {
+    private bool defending;
     public Animator anim;
     public Character2Behavior(Battler parent)
     {
         Battler = parent;
     }
 
+    public override bool Defending
+    {
+        get
+        {
+            return defending;
+        }
+        set
+        {
+            defending = value;
+            anim.SetBool("Defending", value);
+        }
+    }
+
     public override void Initialize()
     {
+        defending = false;
         anim = Battler.GetComponent<Animator>();
         Name = "Steve";
         Stats = new Stats
@@ -42,7 +57,7 @@ public class Character2Behavior : BattleBehavior
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         yield return new WaitForSeconds(0.5f);
         target.BattleBehavior.TakeDamage(user, baseDamage);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         anim.SetInteger("State", 1);
         yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
         anim.SetInteger("State", 0);
