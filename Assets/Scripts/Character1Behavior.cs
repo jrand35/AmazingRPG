@@ -11,6 +11,7 @@ public class Character1Behavior : BattleBehavior
 
     public override void Initialize()
     {
+        base.Initialize();
         Name = "Josh";
         Stats = new Stats
         {

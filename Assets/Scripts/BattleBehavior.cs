@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public abstract class BattleBehavior : MonoBehaviour {
     public static event HPTextHandler HPText;
     public static event SpecialEffectsHandler SpecialEffects;
+    public static event Action<BattleBehavior> Death;
+    public event SpecialEffectsHandler a;
     public event CharacterHPHandler HPChanged;
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
+    public Status Status { get; set; }
     public IList<Action> SpecialAbilities { get; protected set; }
     public virtual bool Defending { get; set; }
     protected Battler Battler { get; set; }
@@ -17,7 +21,10 @@ public abstract class BattleBehavior : MonoBehaviour {
 	void Start () {
 	}
 
-    public abstract void Initialize();
+    public virtual void Initialize()
+    {
+        Status = new Status();
+    }
 
     //Used by enemies
     public virtual void ChooseTarget(IList<Battler> battlers)
@@ -27,6 +34,8 @@ public abstract class BattleBehavior : MonoBehaviour {
 
     public virtual IEnumerator EnemyDie()
     {
+        //Amount of time to wait after taking damage
+        yield return new WaitForSeconds(0.5f);
         Renderer r = Battler.GetComponentInChildren<Renderer>();
         Color startColor = r.material.color;
         Color currentColor = startColor;
@@ -48,6 +57,7 @@ public abstract class BattleBehavior : MonoBehaviour {
             r.material.color = currentColor;
             yield return 0;
         }
+        r.enabled = false;
     }
 
     public virtual IEnumerator StandardAttack(Battler user, Battler target)
@@ -74,6 +84,15 @@ public abstract class BattleBehavior : MonoBehaviour {
         if (HPText != null)
         {
             HPText(Battler, -baseDamage);
+        }
+
+        if (Stats.CurrentHP == 0)
+        {
+            Status.SetStatus(StatusEffect.Defeated);
+            if (Death != null)
+            {
+                Death(this);
+            }
         }
     }
 

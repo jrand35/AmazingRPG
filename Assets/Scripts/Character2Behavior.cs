@@ -26,6 +26,7 @@ public class Character2Behavior : BattleBehavior
 
     public override void Initialize()
     {
+        base.Initialize();
         defending = false;
         anim = Battler.GetComponent<Animator>();
         Name = "Steve";
@@ -77,6 +78,9 @@ public class Character2Behavior : BattleBehavior
 
         public override IEnumerator Run(Battler user, Battler target)
         {
+            Animator anim = user.GetComponent<Animator>();
+            anim.SetInteger("State", 3);
+            yield return new WaitForSeconds(1.4f);
             int duration = 40;
             Material m = target.GetComponentInChildren<Renderer>().material;
             m.EnableKeyword("_EMISSION");
@@ -88,6 +92,7 @@ public class Character2Behavior : BattleBehavior
                 yield return 0;
             }
             target.BattleBehavior.RestoreHP(user, 100);
+            anim.SetInteger("State", 0);
             Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
         }
     }
