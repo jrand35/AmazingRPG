@@ -55,7 +55,16 @@ public class Character1Behavior : BattleBehavior
 
         public override IEnumerator Run(Battler user, Battler target)
         {
-            yield return new WaitForSeconds(1f);
+            int duration = 40;
+            Material m = target.GetComponentInChildren<Renderer>().material;
+            m.EnableKeyword("_EMISSION");
+
+            SpecialEffectsManager.RestoreParticles(target);
+            for (int i = 0; i < duration; i++)
+            {
+                m.SetColor("_EmissionColor", Color.white * 0.6f * Mathf.Sin((float)i / duration * Mathf.PI));
+                yield return 0;
+            }
             target.BattleBehavior.RestoreHP(user, 100);
             Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
         }

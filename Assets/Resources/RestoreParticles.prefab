@@ -11,7 +11,7 @@ GameObject:
   - 198: {fileID: 19808786}
   - 199: {fileID: 19902456}
   m_Layer: 0
-  m_Name: Restore Particles
+  m_Name: RestoreParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 197240}
   serializedVersion: 2
-  lengthInSec: 1
+  lengthInSec: 0.75
   startDelay:
     scalar: 0
     maxCurve:
@@ -1540,7 +1540,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: lengthInSec
+      value: 0.75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 197240}

@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\PotionItem.cs" />
     <Compile Include="Assets\Scripts\RatBehavior.cs" />
     <Compile Include="Assets\Scripts\Shield.cs" />
+    <Compile Include="Assets\Scripts\SpecialEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Star.cs" />
     <Compile Include="Assets\Scripts\Stats.cs" />
   </ItemGroup>
