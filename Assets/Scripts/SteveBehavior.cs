@@ -70,7 +70,7 @@ public class SteveBehavior : BattleBehavior
         {
             BattleBehavior = parent;
             Name = "Restore";
-            Description = "Restores 100 HP to a party member.";
+            Description = "Restores 150 HP to a party member.";
             RequiredSP = 5;
             Power = 0;
             ActionTarget = ActionTarget.PartyMember;
@@ -91,9 +91,9 @@ public class SteveBehavior : BattleBehavior
                 m.SetColor("_EmissionColor", Color.white * 0.6f * Mathf.Sin((float) i / duration * Mathf.PI));
                 yield return 0;
             }
-            target.BattleBehavior.RestoreHP(user, 100);
+            target.BattleBehavior.RestoreHP(user, 150);
             anim.SetInteger("State", 0);
-            Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
+            Debug.Log(user.BattleBehavior.Name + " restored 150 HP to " + target.BattleBehavior.Name);
         }
     }
 }

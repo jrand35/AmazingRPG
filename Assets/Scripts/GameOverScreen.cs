@@ -6,8 +6,7 @@ using System.Collections;
 public class GameOverScreen : MonoBehaviour {
     public Image black;
     public Text text;
-    public Button button;
-    public Text buttonText;
+    public Text retryText;
     public int duration = 130;
 
     void Start()
@@ -15,31 +14,30 @@ public class GameOverScreen : MonoBehaviour {
         StartCoroutine(Run());
     }
 
-    public void Retry()
+    void Update()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     IEnumerator Run()
     {
         Color initBlackColor = black.color;
         Color initTextColor = text.color;
-        Color initButtonColor = button.image.color;
-        Color initButtonTextColor = buttonText.color;
+        Color initRetryTextColor = retryText.color;
         for (int i = 0; i < duration; i++)
         {
             Color newBlackColor = initBlackColor;
             newBlackColor.a = initBlackColor.a * ((float)i / duration);
             Color newTextColor = initTextColor;
             newTextColor.a = initTextColor.a * ((float)i / duration);
-            Color newButtonColor = initTextColor;
-            newButtonColor.a = initButtonColor.a * ((float)i / duration);
-            Color newButtonTextColor = initButtonTextColor;
-            newButtonTextColor.a = initButtonTextColor.a * ((float)i / duration);
+            Color newRetryTextColor = initRetryTextColor;
+            newRetryTextColor.a = initRetryTextColor.a * ((float)i / duration);
             black.color = newBlackColor;
             text.color = newTextColor;
-            button.image.color = newButtonColor;
-            buttonText.color = newButtonTextColor;
+            retryText.color = newRetryTextColor;
             yield return 0;
         }
     }

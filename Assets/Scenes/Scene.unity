@@ -41,7 +41,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -66,7 +66,8 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000001, guid: 13a70aedf12ed964cb969ca1eeb01a08,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -538,7 +539,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifebar: {fileID: 0}
   BattleMenu: {fileID: 195435372}
-  GameOverPrefab: {fileID: 129034, guid: ae37f60d06f0bd64ba5bb6d1c1c31396, type: 2}
+  GameOverPrefab: {fileID: 145636, guid: ae37f60d06f0bd64ba5bb6d1c1c31396, type: 2}
+  WinPrefab: {fileID: 185522, guid: 63c8c5bc31930554ea19090659b41e16, type: 2}
   Canvas: {fileID: 1862816278}
   LifebarPrefab: {fileID: 108696, guid: 0594a586872ea704c8d53c78f3630b68, type: 2}
   ShieldPrefab: {fileID: 179238, guid: 1953c05ccd590dd4d9dfaa8eddba858f, type: 2}

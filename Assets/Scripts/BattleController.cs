@@ -9,6 +9,7 @@ public class BattleController : MonoBehaviour {
     public Lifebar lifebar;
     public BattleMenu BattleMenu;
     public GameObject GameOverPrefab;
+    public GameObject WinPrefab;
     public GameObject Canvas;
     public GameObject LifebarPrefab;
     public GameObject ShieldPrefab;
@@ -91,6 +92,7 @@ public class BattleController : MonoBehaviour {
         StartCoroutine(DeathRoutine(battler, type));
     }
 
+    //For when a character or enemy dies
     IEnumerator DeathRoutine(BattleBehavior battler, BattlerType type)
     {
         wait = true;
@@ -191,6 +193,9 @@ public class BattleController : MonoBehaviour {
                 {
                     Debug.Log("Victory!");
                     battleOver = true;
+                    GameObject win = Instantiate(WinPrefab) as GameObject;
+                    win.transform.SetParent(Canvas.transform);
+                    win.transform.localPosition = Vector3.zero;
                     yield break;
                 }
                 else if (AllCharactersDefeated())
