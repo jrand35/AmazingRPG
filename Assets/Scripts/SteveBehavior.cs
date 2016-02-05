@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Character2Behavior : BattleBehavior
+public class SteveBehavior : BattleBehavior
 {
     private bool defending;
     public Animator anim;
-    public Character2Behavior(Battler parent)
+    public SteveBehavior(Battler parent)
     {
         Battler = parent;
     }
@@ -36,11 +36,11 @@ public class Character2Behavior : BattleBehavior
             MaxSP = 400,
             CurrentHP = 400,
             CurrentSP = 400,
-            Attack = 400,
-            Defense = 400,
-            SpAttack = 400,
-            SpDefense = 400,
-            Speed = 600,
+            Attack = 23,
+            Defense = 20,
+            SpAttack = 25,
+            SpDefense = 25,
+            Speed = 30,
             Luck = 20
         };
         SpecialAbilities = new List<Action>();
@@ -54,7 +54,7 @@ public class Character2Behavior : BattleBehavior
         anim.SetInteger("State", 1);
         yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
         anim.SetInteger("State", 2);
-        int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
+        int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (target.BattleBehavior.Stats.Defense * 3);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         yield return new WaitForSeconds(0.5f);
         target.BattleBehavior.TakeDamage(user, baseDamage);

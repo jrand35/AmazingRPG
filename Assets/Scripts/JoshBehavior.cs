@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Character1Behavior : BattleBehavior
+public class JoshBehavior : BattleBehavior
 {
-    public Character1Behavior(Battler parent)
+    public JoshBehavior(Battler parent)
     {
         Battler = parent;
     }
@@ -17,13 +17,13 @@ public class Character1Behavior : BattleBehavior
         {
             MaxHP = 500,
             MaxSP = 500,
-            CurrentHP = 300,
+            CurrentHP = 500,
             CurrentSP = 500,
-            Attack = 500,
-            Defense = 500,
-            SpAttack = 500,
-            SpDefense = 500,
-            Speed = 500,
+            Attack = 28,
+            Defense = 22,
+            SpAttack = 30,
+            SpDefense = 32,
+            Speed = 24,
             Luck = 20
         };
         SpecialAbilities = new List<Action>();
@@ -35,7 +35,7 @@ public class Character1Behavior : BattleBehavior
     {
         Vector3 startPos = user.gameObject.transform.position;
         yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
-        int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (target.BattleBehavior.Stats.Defense * 2);
+        int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (target.BattleBehavior.Stats.Defense * 3);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.5f);
@@ -146,7 +146,7 @@ public class Character1Behavior : BattleBehavior
                 yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(3f);
-            int baseDamage = (int)((user.BattleBehavior.Stats.SpAttack * 4 * Power) - (target.BattleBehavior.Stats.SpDefense * 2));
+            int baseDamage = (int)((user.BattleBehavior.Stats.SpAttack * 6 * Power) - (target.BattleBehavior.Stats.SpDefense * 3));
             baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
             target.BattleBehavior.TakeDamage(user, baseDamage);
             yield return Brighten();

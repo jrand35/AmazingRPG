@@ -22,13 +22,13 @@ public class Battler : MonoBehaviour
         {
             case BattlerID.Character1:
                 BattlerType = BattlerType.Character;
-                BattleBehavior = new Character1Behavior(this);
+                BattleBehavior = new JoshBehavior(this);
                 BattleBehavior.Initialize();
                 break;
 
             case BattlerID.Character2:
                 BattlerType = BattlerType.Character;
-                BattleBehavior = new Character2Behavior(this);
+                BattleBehavior = new SteveBehavior(this);
                 BattleBehavior.Initialize();
                 break;
 

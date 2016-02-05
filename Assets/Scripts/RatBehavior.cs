@@ -18,15 +18,15 @@ public class RatBehavior : BattleBehavior
         Name = "Rat";
         Stats = new Stats
         {
-            MaxHP = 300,
+            MaxHP = 500,
             MaxSP = 300,
-            CurrentHP = 300,
-            CurrentSP = 300,
-            Attack = 300,
-            Defense = 300,
-            SpAttack = 300,
-            SpDefense = 300,
-            Speed = 300,
+            CurrentHP = 750,
+            CurrentSP = 750,
+            Attack = 20,
+            Defense = 10,
+            SpAttack = 20,
+            SpDefense = 10,
+            Speed = 10,
             Luck = 20
         };
         SpecialAbilities = new List<Action>();
@@ -47,7 +47,7 @@ public class RatBehavior : BattleBehavior
         Vector3 startPos = user.gameObject.transform.position;
         yield return Move.MoveInFrontOfBattler(user, Target, startPos, new Vector3(2f, 0f, 0f));
         anim.SetInteger("State", 2);
-        int baseDamage = (user.BattleBehavior.Stats.Attack * 4) - (Target.BattleBehavior.Stats.Defense * 2);
+        int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (Target.BattleBehavior.Stats.Defense * 3);
         if (baseDamage > 0)
             baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
         else

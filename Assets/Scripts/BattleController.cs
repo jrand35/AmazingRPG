@@ -235,7 +235,7 @@ public class BattleController : MonoBehaviour {
                     yield return 0;
                 }
             }
-            yield return 0;
+            //yield return 0;
         }
     }
 }

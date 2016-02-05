@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BattleMenu : MonoBehaviour {
     public event CharacterTurnHandler StartCharacterTurn;
@@ -166,6 +167,9 @@ public class BattleMenu : MonoBehaviour {
 
     public void CharacterTurn(Battler character)
     {
+        //Only attack enemies that are alive
+        allEnemies = allEnemies.Where(e => e.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+
         onTurn = true;
         cursorHover = false;
         gameObject.SetActive(true);
