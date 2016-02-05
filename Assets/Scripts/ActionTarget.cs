@@ -2,7 +2,8 @@
 using System.Collections;
 
 public enum ActionTarget {
-    PartyMember = 0,
+    LivePartyMember = 0,
+    PartyMember,
     Party,
     Enemy,
     AllEnemies,

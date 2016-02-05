@@ -48,10 +48,10 @@ public class JoshBehavior : BattleBehavior
         {
             BattleBehavior = parent;
             Name = "Restore";
-            Description = "Restores 150 HP to a party member.";
+            Description = "Restores 200 HP to a party member.";
             RequiredSP = 5;
             Power = 0;
-            ActionTarget = ActionTarget.PartyMember;
+            ActionTarget = ActionTarget.LivePartyMember;
         }
 
         public override IEnumerator Run(Battler user, Battler target)
@@ -66,8 +66,8 @@ public class JoshBehavior : BattleBehavior
                 m.SetColor("_EmissionColor", Color.white * 0.6f * Mathf.Sin((float)i / duration * Mathf.PI));
                 yield return 0;
             }
-            target.BattleBehavior.RestoreHP(user, 150);
-            Debug.Log(user.BattleBehavior.Name + " restored 150 HP to " + target.BattleBehavior.Name);
+            target.BattleBehavior.RestoreHP(user, 200);
+            Debug.Log(user.BattleBehavior.Name + " restored 200 HP to " + target.BattleBehavior.Name);
         }
     }
 

@@ -386,8 +386,22 @@ public class BattleMenu : MonoBehaviour {
         CharacterCursor.SetActive(true);
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Player;
-        listSize = allCharacters.Count;
-        MoveCursor(allCharacters[charIndex]);
+        IList<Battler> characterList = allCharacters;
+        // if choosing a healing special ability that can only target live party members
+        if (PrevMenu == BattleMenuItem.Special)
+        {
+            Action specialAttack = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex];
+            if (specialAttack.ActionTarget == ActionTarget.LivePartyMember)
+            {
+                characterList = allCharacters.Where(c => c.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+            }
+        }
+        listSize = characterList.Count;
+        if (charIndex >= listSize)
+        {
+            charIndex = listSize - 1;
+        }
+        MoveCursor(characterList[charIndex]);
 
         for (int i = 0; i < maxListSize; i++)
         {
@@ -397,7 +411,7 @@ public class BattleMenu : MonoBehaviour {
             }
             else
             {
-                Text[i].text = allCharacters[i].BattleBehavior.Name;
+                Text[i].text = characterList[i].BattleBehavior.Name;
             }
         }
     }
@@ -562,7 +576,7 @@ public class BattleMenu : MonoBehaviour {
                         EnemyMenu();
                         //Select.Play();
                     }
-                    else if (specialAttack1.ActionTarget == ActionTarget.PartyMember || specialAttack1.ActionTarget == ActionTarget.Party)
+                    else if (specialAttack1.ActionTarget == ActionTarget.PartyMember || specialAttack1.ActionTarget == ActionTarget.LivePartyMember || specialAttack1.ActionTarget == ActionTarget.Party)
                     {
                         CharacterMenu();
                         //Select.Play();
