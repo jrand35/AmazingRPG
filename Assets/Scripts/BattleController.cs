@@ -232,9 +232,11 @@ public class BattleController : MonoBehaviour {
                 }
                 else
                 {
-                    Battler target = battler.BattleBehavior.ChooseTarget(allCharacters);
-                    yield return battler.BattleBehavior.StandardAttack(battler, target);
+                    //Battler target = battler.BattleBehavior.ChooseTarget(allCharacters);
+                    TurnArgs args = battler.BattleBehavior.ChooseAttack(allCharacters);
+                    //yield return battler.BattleBehavior.StandardAttack(battler, target);
                     //yield return battler.BattleBehavior.SpecialAbilities[0].Run(battler, target);
+                    yield return PerformAction(battler, args.ActionType, args.ActionIndex, args.Target);
                 }
                 //If a battler is dying
                 while (wait)

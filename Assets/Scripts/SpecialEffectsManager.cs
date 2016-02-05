@@ -41,16 +41,18 @@ public static class SpecialEffectsManager {
         }
     }
 
+    //Current instance
     private static GameObject specialName;
+    private static GameObject specialNamePrefab;
     private static GameObject SpecialNamePrefab
     {
         get
         {
-            if (specialName == null)
+            if (specialNamePrefab == null)
             {
-                specialName = Resources.Load<GameObject>("SpecialName");
+                specialNamePrefab = Resources.Load<GameObject>("SpecialName");
             }
-            return specialName;
+            return specialNamePrefab;
         }
     }
 
@@ -72,10 +74,11 @@ public static class SpecialEffectsManager {
 
     public static void SpecialName(string specialAttackName)
     {
-        GameObject name = MonoBehaviour.Instantiate(SpecialNamePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-        name.transform.SetParent(Canvas.transform);
-        name.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
-        name.GetComponentInChildren<Text>().text = specialAttackName;
-        MonoBehaviour.Destroy(name, 2f);
+        MonoBehaviour.Destroy(specialName);
+        specialName = MonoBehaviour.Instantiate(SpecialNamePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        specialName.transform.SetParent(Canvas.transform);
+        specialName.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
+        specialName.GetComponentInChildren<Text>().text = specialAttackName;
+        MonoBehaviour.Destroy(specialName, 2f);
     }
 }

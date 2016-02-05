@@ -28,7 +28,7 @@ public abstract class BattleBehavior : MonoBehaviour {
     }
 
     //Used by enemies
-    //50% normal attack, 50% special ability
+    //75% normal attack, 25% special ability
     public virtual TurnArgs ChooseAttack(IList<Battler> allCharacters)
     {
         IList<Battler> liveCharacters = allCharacters.Where(b => b.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
@@ -36,13 +36,26 @@ public abstract class BattleBehavior : MonoBehaviour {
         Battler target = liveCharacters[index];
         float attackType = UnityEngine.Random.Range(0f, 1f);
         //Choose to use a normal attack or a special attack
-        ActionType actionType = attackType < 0.5f ? ActionType.Attack : ActionType.Special;
+        ActionType actionType = attackType < 0.75f ? ActionType.Attack : ActionType.Special;
         int specialIndex = 0;
         ActionTarget actionTarget = ActionTarget.PartyMember;
         if (actionType == ActionType.Special)
         {
-            specialIndex = UnityEngine.Random.Range(0, SpecialAbilities.Count);
-            actionTarget = SpecialAbilities[specialIndex].ActionTarget;
+            //Check to see if you have enough SP
+            IList<Action> usableAbilities = SpecialAbilities.Where(a => Stats.CurrentSP >= a.RequiredSP).ToList();
+            if (usableAbilities.Count == 0)
+            {
+                actionType = ActionType.Attack;
+            }
+            //Pick a special attack to use out of all the usable attacks, then get its index in the SpecialAbilities list
+            else
+            {
+                specialIndex = UnityEngine.Random.Range(0, usableAbilities.Count);
+                Action chosenAction = usableAbilities[specialIndex];
+                specialIndex = SpecialAbilities.IndexOf(chosenAction);
+                //Possibly check to see if an attack can be used on a particular character
+                actionTarget = SpecialAbilities[specialIndex].ActionTarget;
+            }
         }
         TurnArgs args = new TurnArgs
         {
