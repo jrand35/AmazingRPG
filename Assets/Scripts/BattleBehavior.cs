@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 
 public abstract class BattleBehavior : MonoBehaviour {
     public static event HPTextHandler HPText;
@@ -16,7 +17,7 @@ public abstract class BattleBehavior : MonoBehaviour {
     public virtual bool Defending { get; set; }
     protected Battler Battler { get; set; }
     //For letting an enemy choose a random target
-    protected Battler Target { get; set; }
+    //protected Battler Target { get; set; }
 	// Use this for initialization
 	void Start () {
 	}
@@ -27,9 +28,36 @@ public abstract class BattleBehavior : MonoBehaviour {
     }
 
     //Used by enemies
-    public virtual void ChooseTarget(IList<Battler> battlers)
+    //50% normal attack, 50% special ability
+    public virtual TurnArgs ChooseAttack(IList<Battler> allCharacters)
     {
-
+        IList<Battler> liveCharacters = allCharacters.Where(b => b.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+        int index = UnityEngine.Random.Range(0, liveCharacters.Count);
+        Battler target = liveCharacters[index];
+        float attackType = UnityEngine.Random.Range(0f, 1f);
+        //Choose to use a normal attack or a special attack
+        ActionType actionType = attackType < 0.5f ? ActionType.Attack : ActionType.Special;
+        int specialIndex = 0;
+        ActionTarget actionTarget = ActionTarget.PartyMember;
+        if (actionType == ActionType.Special)
+        {
+            specialIndex = UnityEngine.Random.Range(0, SpecialAbilities.Count);
+            actionTarget = SpecialAbilities[specialIndex].ActionTarget;
+        }
+        TurnArgs args = new TurnArgs
+        {
+            User = Battler,
+            Target = target,
+            ActionTarget = actionTarget,
+            ActionIndex = specialIndex,
+            ActionType = actionType,
+        };
+        return args;
+    }
+    
+    public virtual Battler ChooseTarget(IList<Battler> battlers)
+    {
+        return null;
     }
 
     public virtual IEnumerator CharacterDie()

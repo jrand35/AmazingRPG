@@ -84,7 +84,7 @@ public class JoshBehavior : BattleBehavior
             Name = "Shooting Stars";
             Description = "Attack all enemies with a barrage of stars.";
             RequiredSP = 25;
-            Power = 2;
+            Power = 2f;
             ActionTarget = ActionTarget.Enemy;  //Change
             light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
             StarPrefab = Resources.Load<GameObject>("Star");

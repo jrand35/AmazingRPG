@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterTurnArgs : MonoBehaviour {
+public class TurnArgs : MonoBehaviour {
     public Battler User { get; set; }
     public Battler Target { get; set; }
     public ActionTarget ActionTarget { get; set; }

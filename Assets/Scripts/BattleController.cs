@@ -23,7 +23,7 @@ public class BattleController : MonoBehaviour {
     private IList<Battler> allBattlers;
     private IList<Shield> Shields;
     private Material MagicCircleMaterial;
-    private CharacterTurnArgs charTurnArgs;
+    private TurnArgs charTurnArgs;
     private bool wait;
     private bool battleOver;
 
@@ -67,7 +67,7 @@ public class BattleController : MonoBehaviour {
         StartCoroutine(Run());
 	}
 
-    void OnCharacterTurn(CharacterTurnArgs args)
+    void OnCharacterTurn(TurnArgs args)
     {
         wait = false;
         charTurnArgs = args;
@@ -232,8 +232,9 @@ public class BattleController : MonoBehaviour {
                 }
                 else
                 {
-                    battler.BattleBehavior.ChooseTarget(allCharacters);
-                    yield return battler.BattleBehavior.StandardAttack(battler, null);
+                    Battler target = battler.BattleBehavior.ChooseTarget(allCharacters);
+                    yield return battler.BattleBehavior.StandardAttack(battler, target);
+                    //yield return battler.BattleBehavior.SpecialAbilities[0].Run(battler, target);
                 }
                 //If a battler is dying
                 while (wait)

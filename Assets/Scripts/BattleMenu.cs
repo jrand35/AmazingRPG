@@ -502,7 +502,7 @@ public class BattleMenu : MonoBehaviour {
 
                     //Defend
                     case 3:
-                        CharacterTurnArgs defendArgs = new CharacterTurnArgs
+                        TurnArgs defendArgs = new TurnArgs
                         {
                             User = currentCharacter,
                             Target = null,
@@ -521,7 +521,7 @@ public class BattleMenu : MonoBehaviour {
                 //Normal attack
                 if (PrevMenu == BattleMenuItem.Main)
                 {
-                    CharacterTurnArgs args = new CharacterTurnArgs
+                    TurnArgs args = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = allEnemies[enemyIndex],
@@ -535,7 +535,7 @@ public class BattleMenu : MonoBehaviour {
                 //Special attack
                 else if (PrevMenu == BattleMenuItem.Special)
                 {
-                    CharacterTurnArgs args = new CharacterTurnArgs
+                    TurnArgs args = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = allEnemies[enemyIndex],
@@ -585,7 +585,7 @@ public class BattleMenu : MonoBehaviour {
                 if (PrevMenu == BattleMenuItem.Item)
                 {
                     Item item = currentCharacter.Inventory[itemIndex];
-                    CharacterTurnArgs itemArgs = new CharacterTurnArgs
+                    TurnArgs itemArgs = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = allCharacters[charIndex],
@@ -597,7 +597,7 @@ public class BattleMenu : MonoBehaviour {
                 }
                 else if (PrevMenu == BattleMenuItem.Special)
                 {
-                    CharacterTurnArgs args = new CharacterTurnArgs
+                    TurnArgs args = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = allCharacters[charIndex],
@@ -619,7 +619,7 @@ public class BattleMenu : MonoBehaviour {
                 //Normal attack
                 if (PrevMenu == BattleMenuItem.Main)
                 {
-                    CharacterTurnArgs enemyArgs = new CharacterTurnArgs
+                    TurnArgs enemyArgs = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = null,
@@ -634,7 +634,7 @@ public class BattleMenu : MonoBehaviour {
                 //Special attack
                 else if (PrevMenu == BattleMenuItem.Special)
                 {
-                    CharacterTurnArgs args = new CharacterTurnArgs
+                    TurnArgs args = new TurnArgs
                     {
                         User = currentCharacter,
                         Target = null,
@@ -651,7 +651,7 @@ public class BattleMenu : MonoBehaviour {
         UpdateCharacterName();
     }
 
-    void OnCharacterTurn(CharacterTurnArgs args)
+    void OnCharacterTurn(TurnArgs args)
     {
         if (StartCharacterTurn != null)
         {

@@ -1,7 +1,20 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public static class SpecialEffectsManager {
+    private static GameObject canvas;
+    private static GameObject Canvas
+    {
+        get
+        {
+            if (canvas == null)
+            {
+                canvas = GameObject.Find("Canvas");
+            }
+            return canvas;
+        }
+    }
     private static GameObject rpp;
     private static GameObject RestoreParticlesPrefab
     {
@@ -28,6 +41,19 @@ public static class SpecialEffectsManager {
         }
     }
 
+    private static GameObject specialName;
+    private static GameObject SpecialNamePrefab
+    {
+        get
+        {
+            if (specialName == null)
+            {
+                specialName = Resources.Load<GameObject>("SpecialName");
+            }
+            return specialName;
+        }
+    }
+
     public static void RestoreParticles(Battler battler)
     {
         Vector3 pos = battler.gameObject.transform.position;
@@ -42,5 +68,14 @@ public static class SpecialEffectsManager {
         pos.y = 0f;
         GameObject deathParticles = MonoBehaviour.Instantiate(DeathParticlesPrefab, pos, Quaternion.identity) as GameObject;
         MonoBehaviour.Destroy(deathParticles, 3f);
+    }
+
+    public static void SpecialName(string specialAttackName)
+    {
+        GameObject name = MonoBehaviour.Instantiate(SpecialNamePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        name.transform.SetParent(Canvas.transform);
+        name.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
+        name.GetComponentInChildren<Text>().text = specialAttackName;
+        MonoBehaviour.Destroy(name, 2f);
     }
 }
