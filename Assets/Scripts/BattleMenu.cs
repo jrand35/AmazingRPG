@@ -710,7 +710,7 @@ public class BattleMenu : MonoBehaviour {
         UpdateCharacterName();
     }
 
-    void Finish()
+    public void Finish()
     {
         onTurn = false;
         MagicCircle.SetActive(false);

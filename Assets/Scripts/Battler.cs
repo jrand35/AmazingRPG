@@ -37,6 +37,12 @@ public class Battler : MonoBehaviour
                 BattleBehavior = new RatBehavior(this);
                 BattleBehavior.Initialize();
                 break;
+
+            case BattlerID.HyperRat:
+                BattlerType = BattlerType.Enemy;
+                BattleBehavior = new HyperRatBehavior(this);
+                BattleBehavior.Initialize();
+                break;
         }
     }
 

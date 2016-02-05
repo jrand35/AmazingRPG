@@ -29,6 +29,7 @@ public class BattleController : MonoBehaviour {
 	void Start () {
         wait = false;
         battleOver = false;
+        BattleMenu.Finish();
         foreach (Battler b in Battlers)
         {
             b.Initialize();

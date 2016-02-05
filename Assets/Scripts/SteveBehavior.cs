@@ -52,7 +52,7 @@ public class SteveBehavior : BattleBehavior
         Animator anim = user.GetComponent<Animator>();
         Vector3 startPos = user.gameObject.transform.position;
         anim.SetInteger("State", 1);
-        yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
+        yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f), 50);
         anim.SetInteger("State", 2);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (target.BattleBehavior.Stats.Defense * 3);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
@@ -60,7 +60,7 @@ public class SteveBehavior : BattleBehavior
         target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.3f);
         anim.SetInteger("State", 1);
-        yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f));
+        yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f), 50);
         anim.SetInteger("State", 0);
     }
 

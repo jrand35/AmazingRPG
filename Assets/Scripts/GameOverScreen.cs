@@ -17,7 +17,7 @@ public class GameOverScreen : MonoBehaviour {
 
     public void Retry()
     {
-        SceneManager.LoadScene("Scene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     IEnumerator Run()

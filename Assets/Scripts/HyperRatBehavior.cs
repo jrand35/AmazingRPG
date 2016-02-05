@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class RatBehavior : BattleBehavior
+public class HyperRatBehavior : BattleBehavior
 {
     private Animator anim;
-    public RatBehavior(Battler parent)
+    public HyperRatBehavior(Battler parent)
     {
         Battler = parent;
         anim = parent.gameObject.GetComponent<Animator>();
@@ -15,22 +15,21 @@ public class RatBehavior : BattleBehavior
     public override void Initialize()
     {
         base.Initialize();
-        Name = "Rat";
+        Name = "Hyper Rat";
         Stats = new Stats
         {
-            MaxHP = 500,
+            MaxHP = 900,
             MaxSP = 500,
-            CurrentHP = 500,
+            CurrentHP = 900,
             CurrentSP = 500,
-            Attack = 18,
-            Defense = 10,
-            SpAttack = 20,
-            SpDefense = 10,
-            Speed = 10,
-            Luck = 20
+            Attack = 23,
+            Defense = 20,
+            SpAttack = 30,
+            SpDefense = 25,
+            Speed = 32,
+            Luck = 22
         };
         SpecialAbilities = new List<Action>();
-        //SpecialAbilities.Add(new Restore(this));
     }
 
     public override void ChooseTarget(IList<Battler> characters)
@@ -45,7 +44,7 @@ public class RatBehavior : BattleBehavior
     {
         anim.SetInteger("State", 1);
         Vector3 startPos = user.gameObject.transform.position;
-        yield return Move.MoveInFrontOfBattler(user, Target, startPos, new Vector3(2f, 0f, 0f), 50);
+        yield return Move.MoveInFrontOfBattler(user, Target, startPos, new Vector3(2f, 0f, 0f), 30);
         anim.SetInteger("State", 2);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (Target.BattleBehavior.Stats.Defense * 3);
         if (baseDamage > 0)
@@ -56,7 +55,7 @@ public class RatBehavior : BattleBehavior
         Target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.3f);
         anim.SetInteger("State", 1);
-        yield return Move.MoveBackFromBattler(user, Target, startPos, new Vector3(2f, 0f, 0f), 50);
+        yield return Move.MoveBackFromBattler(user, Target, startPos, new Vector3(2f, 0f, 0f), 30);
         anim.SetInteger("State", 0);
     }
 }
