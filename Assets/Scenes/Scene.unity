@@ -538,6 +538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifebar: {fileID: 0}
   BattleMenu: {fileID: 195435372}
+  GameOverPrefab: {fileID: 129034, guid: ae37f60d06f0bd64ba5bb6d1c1c31396, type: 2}
   Canvas: {fileID: 1862816278}
   LifebarPrefab: {fileID: 108696, guid: 0594a586872ea704c8d53c78f3630b68, type: 2}
   ShieldPrefab: {fileID: 179238, guid: 1953c05ccd590dd4d9dfaa8eddba858f, type: 2}

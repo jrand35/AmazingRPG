@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\CharacterTurnArgs.cs" />
      <Compile Include="Assets\Scripts\DamageNumber.cs" />
      <Compile Include="Assets\Scripts\EventHandlers.cs" />
+     <Compile Include="Assets\Scripts\GameOverScreen.cs" />
      <Compile Include="Assets\Scripts\Item.cs" />
      <Compile Include="Assets\Scripts\Lifebar.cs" />
      <Compile Include="Assets\Scripts\Move.cs" />

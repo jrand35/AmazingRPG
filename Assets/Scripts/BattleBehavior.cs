@@ -6,7 +6,7 @@ using System;
 public abstract class BattleBehavior : MonoBehaviour {
     public static event HPTextHandler HPText;
     public static event SpecialEffectsHandler SpecialEffects;
-    public static event Action<BattleBehavior> Death;
+    public static event Action<BattleBehavior, BattlerType> Death;
     public event SpecialEffectsHandler a;
     public event CharacterHPHandler HPChanged;
     public string Name { get; protected set; }
@@ -30,6 +30,14 @@ public abstract class BattleBehavior : MonoBehaviour {
     public virtual void ChooseTarget(IList<Battler> battlers)
     {
 
+    }
+
+    public virtual IEnumerator CharacterDie()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Animator anim = Battler.GetComponent<Animator>();
+        anim.SetInteger("State", -1);
+        yield return new WaitForSeconds(1.5f);
     }
 
     public virtual IEnumerator EnemyDie()
@@ -91,7 +99,7 @@ public abstract class BattleBehavior : MonoBehaviour {
             Status.SetStatus(StatusEffect.Defeated);
             if (Death != null)
             {
-                Death(this);
+                Death(this, Battler.BattlerType);
             }
         }
     }

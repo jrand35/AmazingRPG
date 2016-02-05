@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class RatBehavior : BattleBehavior
 {
@@ -32,10 +33,12 @@ public class RatBehavior : BattleBehavior
         //SpecialAbilities.Add(new Restore(this));
     }
 
-    public override void ChooseTarget(IList<Battler> battlers)
+    public override void ChooseTarget(IList<Battler> characters)
     {
-        int index = Random.Range(0, battlers.Count);
-        Target = battlers[index];
+        //Do not attack dead characters
+        IList<Battler> liveCharacters = characters.Where(b => b.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+        int index = Random.Range(0, liveCharacters.Count);
+        Target = liveCharacters[index];
     }
 
     public override IEnumerator StandardAttack(Battler user, Battler target)

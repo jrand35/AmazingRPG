@@ -8,6 +8,7 @@ using System;
 public class BattleController : MonoBehaviour {
     public Lifebar lifebar;
     public BattleMenu BattleMenu;
+    public GameObject GameOverPrefab;
     public GameObject Canvas;
     public GameObject LifebarPrefab;
     public GameObject ShieldPrefab;
@@ -74,25 +75,32 @@ public class BattleController : MonoBehaviour {
     {
         BattleMenu.StartCharacterTurn += OnCharacterTurn;
         BattleBehavior.HPText += HPText;
-        BattleBehavior.Death += EnemyDied;
+        BattleBehavior.Death += BattlerDied;
     }
 
     void OnDisable()
     {
         BattleMenu.StartCharacterTurn -= OnCharacterTurn;
         BattleBehavior.HPText -= HPText;
-        BattleBehavior.Death -= EnemyDied;
+        BattleBehavior.Death -= BattlerDied;
     }
 
-    void EnemyDied(BattleBehavior enemy)
+    void BattlerDied(BattleBehavior battler, BattlerType type)
     {
-        StartCoroutine(EnemyDeathRoutine(enemy));
+        StartCoroutine(DeathRoutine(battler, type));
     }
 
-    IEnumerator EnemyDeathRoutine(BattleBehavior enemy)
+    IEnumerator DeathRoutine(BattleBehavior battler, BattlerType type)
     {
         wait = true;
-        yield return enemy.EnemyDie();
+        if (type == BattlerType.Character)
+        {
+            yield return battler.CharacterDie();
+        }
+        else if (type == BattlerType.Enemy)
+        {
+            yield return battler.EnemyDie();
+        }
         wait = false;
     }
 
@@ -142,6 +150,18 @@ public class BattleController : MonoBehaviour {
         }
     }
 
+    bool AllCharactersDefeated()
+    {
+        foreach (Battler character in allCharacters)
+        {
+            if (character.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     bool AllEnemiesDefeated()
     {
         foreach (Battler enemy in allEnemies)
@@ -165,6 +185,27 @@ public class BattleController : MonoBehaviour {
             //int battlerIndex = 0;
             foreach (Battler battler in allBattlers)
             {
+                //Check if all enemies are dead
+                if (AllEnemiesDefeated())
+                {
+                    Debug.Log("Victory!");
+                    battleOver = true;
+                    yield break;
+                }
+                else if (AllCharactersDefeated())
+                {
+                    Debug.Log("Game Over...");
+                    battleOver = true;
+                    GameObject gameOver = Instantiate(GameOverPrefab) as GameObject;
+                    gameOver.transform.SetParent(Canvas.transform);
+                    gameOver.transform.localPosition = Vector3.zero;
+                    yield break;
+                }
+                //Skip this character if it is dead
+                if (battler.BattleBehavior.Status.StatusEffect == StatusEffect.Defeated)
+                {
+                    continue;
+                }
                 if (battler.BattlerType == BattlerType.Character)
                 {
                     Shield battlerShield = Shields[battler.BattlerIndex];
@@ -185,28 +226,15 @@ public class BattleController : MonoBehaviour {
                 }
                 else
                 {
-                    //Skip this enemy if it is dead
-                    if (battler.BattleBehavior.Status.StatusEffect == StatusEffect.Defeated)
-                    {
-                        continue;
-                    }
                     battler.BattleBehavior.ChooseTarget(allCharacters);
                     yield return battler.BattleBehavior.StandardAttack(battler, null);
                 }
-                //If an enemy is dying
+                //If a battler is dying
                 while (wait)
                 {
                     yield return 0;
                 }
-                //Check if all enemies are dead
-                if (AllEnemiesDefeated())
-                {
-                    Debug.Log("Victory!");
-                    battleOver = true;
-                    break;
-                }
             }
-            //battlerIndex++;
             yield return 0;
         }
     }
