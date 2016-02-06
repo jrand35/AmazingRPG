@@ -57,6 +57,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -84,7 +90,6 @@
     <Compile Include="Assets\Scripts\Battler.cs" />
     <Compile Include="Assets\Scripts\BattlerID.cs" />
     <Compile Include="Assets\Scripts\BattlerType.cs" />
-    <Compile Include="Assets\Scripts\CharacterTurnArgs.cs" />
     <Compile Include="Assets\Scripts\DamageNumber.cs" />
     <Compile Include="Assets\Scripts\EventHandlers.cs" />
     <Compile Include="Assets\Scripts\GameOverScreen.cs" />
@@ -98,10 +103,13 @@
     <Compile Include="Assets\Scripts\Shield.cs" />
     <Compile Include="Assets\Scripts\SpecialEffectsManager.cs" />
     <Compile Include="Assets\Scripts\Star.cs" />
+    <Compile Include="Assets\Scripts\StartScreen.cs" />
     <Compile Include="Assets\Scripts\Stats.cs" />
     <Compile Include="Assets\Scripts\Status.cs" />
     <Compile Include="Assets\Scripts\StatusEffect.cs" />
     <Compile Include="Assets\Scripts\SteveBehavior.cs" />
+    <Compile Include="Assets\Scripts\TurnArgs.cs" />
+    <Compile Include="Assets\Scripts\WinScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
