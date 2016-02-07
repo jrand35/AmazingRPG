@@ -39,6 +39,7 @@ public abstract class BattleBehavior : MonoBehaviour {
         ActionType actionType = attackType < 0.75f ? ActionType.Attack : ActionType.Special;
         int specialIndex = 0;
         ActionTarget actionTarget = ActionTarget.PartyMember;
+        Action chosenAction = null;
         if (actionType == ActionType.Special)
         {
             //Check to see if you have enough SP
@@ -51,7 +52,7 @@ public abstract class BattleBehavior : MonoBehaviour {
             else
             {
                 specialIndex = UnityEngine.Random.Range(0, usableAbilities.Count);
-                Action chosenAction = usableAbilities[specialIndex];
+                chosenAction = usableAbilities[specialIndex];
                 specialIndex = SpecialAbilities.IndexOf(chosenAction);
                 //Possibly check to see if an attack can be used on a particular character
                 actionTarget = SpecialAbilities[specialIndex].ActionTarget;
@@ -64,6 +65,7 @@ public abstract class BattleBehavior : MonoBehaviour {
             ActionTarget = actionTarget,
             ActionIndex = specialIndex,
             ActionType = actionType,
+            Action = chosenAction
         };
         return args;
     }
@@ -161,6 +163,11 @@ public abstract class BattleBehavior : MonoBehaviour {
         {
             HPText(Battler, amount);
         }
+    }
+
+    public virtual void Victory()
+    {
+        ;
     }
 	
 	// Update is called once per frame

@@ -59,4 +59,17 @@ public class RatBehavior : BattleBehavior
         yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(2f, 0f, 0f), 50);
         anim.SetInteger("State", 0);
     }
+
+    public override void TakeDamage(Battler user, int baseDamage)
+    {
+        base.TakeDamage(user, baseDamage);
+        Battler.StartCoroutine(Anim());
+    }
+
+    IEnumerator Anim()
+    {
+        anim.SetInteger("State", 10);
+        yield return 0;
+        anim.SetInteger("State", 0);
+    }
 }

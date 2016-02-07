@@ -6,6 +6,8 @@ using System.Linq;
 using System;
 
 public class BattleController : MonoBehaviour {
+    public AudioSource BattleMusic;
+    public AudioSource WinMusic;
     public Lifebar lifebar;
     public BattleMenu BattleMenu;
     public GameObject GameOverPrefab;
@@ -127,7 +129,7 @@ public class BattleController : MonoBehaviour {
 
 	}
 
-    IEnumerator PerformAction(Battler user, ActionType ActionType, int actionIndex, Battler target)
+    IEnumerator PerformAction(Battler user, ActionType ActionType, Action action, int actionIndex, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies)
     {
         switch (ActionType)
         {
@@ -136,8 +138,8 @@ public class BattleController : MonoBehaviour {
                 break;
 
             case ActionType.Special:
-                user.BattleBehavior.SpecialAbilities[actionIndex].UseSP(user);
-                yield return user.BattleBehavior.SpecialAbilities[actionIndex].Run(user, target, this);
+                action.UseSP(user);
+                yield return action.Run(user, target, allCharacters, allEnemies, this);
                 break;
 
             case ActionType.Item:
@@ -196,6 +198,12 @@ public class BattleController : MonoBehaviour {
                     GameObject win = Instantiate(WinPrefab) as GameObject;
                     win.transform.SetParent(Canvas.transform);
                     win.transform.localPosition = Vector3.zero;
+                    BattleMusic.Stop();
+                    WinMusic.Play();
+                    foreach (Battler character in allCharacters)
+                    {
+                        character.BattleBehavior.Victory();
+                    }
                     yield break;
                 }
                 else if (AllCharactersDefeated())
@@ -228,7 +236,7 @@ public class BattleController : MonoBehaviour {
                     {
                         yield return 0;
                     }
-                    yield return PerformAction(charTurnArgs.User, charTurnArgs.ActionType, charTurnArgs.ActionIndex, charTurnArgs.Target);
+                    yield return PerformAction(charTurnArgs.User, charTurnArgs.ActionType, charTurnArgs.Action, charTurnArgs.ActionIndex, charTurnArgs.Target, allCharacters, allEnemies);
                 }
                 else
                 {
@@ -236,7 +244,7 @@ public class BattleController : MonoBehaviour {
                     TurnArgs args = battler.BattleBehavior.ChooseAttack(allCharacters);
                     //yield return battler.BattleBehavior.StandardAttack(battler, target);
                     //yield return battler.BattleBehavior.SpecialAbilities[0].Run(battler, target);
-                    yield return PerformAction(battler, args.ActionType, args.ActionIndex, args.Target);
+                    yield return PerformAction(battler, args.ActionType, args.Action, args.ActionIndex, args.Target, allCharacters, allEnemies);
                 }
                 //If a battler is dying
                 while (wait)

@@ -20,7 +20,7 @@ public class WinScreen : MonoBehaviour {
             }
             else if (SceneManager.GetActiveScene().name == "Scene 2")
             {
-                SceneManager.LoadScene("Scene 3");
+                SceneManager.LoadScene("Cutscene");
             }
         }
 	}

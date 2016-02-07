@@ -54,7 +54,7 @@ public class JoshBehavior : BattleBehavior
             ActionTarget = ActionTarget.LivePartyMember;
         }
 
-        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
             int duration = 40;
             Material m = target.GetComponentInChildren<Renderer>().material;
@@ -134,7 +134,7 @@ public class JoshBehavior : BattleBehavior
             Destroy(star, 5f);
         }
 
-        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
             Camera.main.hdr = true;
             Light light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();

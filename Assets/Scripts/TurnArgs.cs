@@ -7,4 +7,5 @@ public class TurnArgs : MonoBehaviour {
     public ActionTarget ActionTarget { get; set; }
     public int ActionIndex { get; set; }
     public ActionType ActionType { get; set; }
+    public Action Action { get; set; }
 }

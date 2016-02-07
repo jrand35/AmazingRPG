@@ -8,6 +8,7 @@ public class Comb : MonoBehaviour {
 	void Start () {
         m = GetComponent<Renderer>().material;
         StartCoroutine(Run());
+        Destroy(gameObject, 5f);
 	}
 	
 	// Update is called once per frame
@@ -24,6 +25,13 @@ public class Comb : MonoBehaviour {
             transform.localRotation = Quaternion.Euler(0f, r, 0f);
             Color col = Color.white * (float)i / fadeDuration;
             m.color = col;
+            yield return 0;
+        }
+        yield return new WaitForSeconds(0.2f);
+        for (int i = 0; i < 50; i++)
+        {
+            float dZ = i * -0.05f;
+            transform.Translate(0f, 0f, dZ);
             yield return 0;
         }
     }

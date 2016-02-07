@@ -56,6 +56,19 @@ public static class SpecialEffectsManager {
         }
     }
 
+    private static GameObject deathCircle;
+    private static GameObject DeathCirclePrefab
+    {
+        get
+        {
+            if (deathCircle == null)
+            {
+                deathCircle = Resources.Load<GameObject>("Circle");
+            }
+            return deathCircle;
+        }
+    }
+
     public static void RestoreParticles(Battler battler)
     {
         Vector3 pos = battler.gameObject.transform.position;
@@ -80,5 +93,12 @@ public static class SpecialEffectsManager {
         specialName.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
         specialName.GetComponentInChildren<Text>().text = specialAttackName;
         MonoBehaviour.Destroy(specialName, 2f);
+    }
+
+    public static void DeathCircle(Battler battler)
+    {
+        Vector3 dir = Random.insideUnitSphere;
+        Quaternion facing = Quaternion.LookRotation(dir);
+        MonoBehaviour.Instantiate(DeathCirclePrefab, battler.gameObject.transform.position, facing);
     }
 }

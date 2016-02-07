@@ -6,10 +6,12 @@ using System.Linq;
 public class TrumpBehavior : BattleBehavior
 {
     private GameObject WallPrefab;
+    private GameObject CombPrefab;
     private Animator anim;
     public TrumpBehavior(Battler parent)
     {
         WallPrefab = Resources.Load<GameObject>("Wall");
+        CombPrefab = Resources.Load<GameObject>("Comb");
         Battler = parent;
         anim = parent.gameObject.GetComponent<Animator>();
     }
@@ -33,6 +35,7 @@ public class TrumpBehavior : BattleBehavior
         };
         SpecialAbilities = new List<Action>();
         SpecialAbilities.Add(new GreatWallOfMexico(this, WallPrefab));
+        SpecialAbilities.Add(new CombOver(this, CombPrefab));
     }
 
     public override TurnArgs ChooseAttack(IList<Battler> allCharacters)
@@ -42,10 +45,11 @@ public class TrumpBehavior : BattleBehavior
         Battler target = liveCharacters[index];
         float attackType = UnityEngine.Random.Range(0f, 1f);
         //Choose to use a normal attack or a special attack
-        ActionType actionType = attackType < 0.75f ? ActionType.Attack : ActionType.Special;
+        ActionType actionType = attackType < 0.5f ? ActionType.Attack : ActionType.Special;
         //ActionType actionType = ActionType.Special;
         int specialIndex = 0;
         ActionTarget actionTarget = ActionTarget.PartyMember;
+        Action chosenAction = null;
         if (actionType == ActionType.Special)
         {
             //Check to see if you have enough SP
@@ -58,10 +62,9 @@ public class TrumpBehavior : BattleBehavior
             else
             {
                 specialIndex = UnityEngine.Random.Range(0, usableAbilities.Count);
-                Action chosenAction = usableAbilities[specialIndex];
-                specialIndex = SpecialAbilities.IndexOf(chosenAction);
+                chosenAction = usableAbilities[specialIndex];
                 //Possibly check to see if an attack can be used on a particular character
-                actionTarget = SpecialAbilities[specialIndex].ActionTarget;
+                actionTarget = chosenAction.ActionTarget;
             }
         }
         TurnArgs args = new TurnArgs
@@ -69,10 +72,39 @@ public class TrumpBehavior : BattleBehavior
             User = Battler,
             Target = target,
             ActionTarget = actionTarget,
-            ActionIndex = specialIndex,
+            ActionIndex = -1,
             ActionType = actionType,
+            Action = chosenAction
         };
         return args;
+    }
+
+    public override IEnumerator EnemyDie()
+    {
+        //Amount of time to wait after taking damage
+        yield return new WaitForSeconds(0.5f);
+        Renderer r = Battler.GetComponentInChildren<Renderer>();
+        Color startColor = r.material.color;
+        Color currentColor = startColor;
+        int duration = 55;
+        SpecialEffectsManager.DeathParticles(Battler);
+        //All of this is necessary just to fade out the object...
+        r.material.SetFloat("_Mode", 3);
+        r.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+        r.material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        r.material.SetInt("_ZWrite", 0);
+        r.material.DisableKeyword("_ALPHATEST_ON");
+        r.material.DisableKeyword("_ALPHABLEND_ON");
+        r.material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+        r.material.renderQueue = 3000;
+        for (int i = 1; i <= duration; i++)
+        {
+            currentColor.a = startColor.a * (1f - ((float)i / duration));
+            //Fix
+            r.material.color = currentColor;
+            yield return 0;
+        }
+        r.enabled = false;
     }
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
@@ -143,7 +175,7 @@ public class TrumpBehavior : BattleBehavior
             }
         }
 
-        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
             SpecialEffectsManager.SpecialName(Name);
             Animator anim = user.gameObject.GetComponent<Animator>();
@@ -174,13 +206,32 @@ public class TrumpBehavior : BattleBehavior
             Name = "Stylish Comb-Over";
             Description = "";
             RequiredSP = 12;
-            Power = 1.1f;
+            Power = 1.2f;
             ActionTarget = ActionTarget.Party;
         }
 
-        public override IEnumerator Run(Battler user, Battler target, BattleController battlecontroller)
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController battlecontroller)
         {
-            yield return 0;
+            Animator anim = user.gameObject.GetComponent<Animator>();
+            SpecialEffectsManager.SpecialName(Name);
+            Vector3 startPos = allCharacters[0].gameObject.transform.position;
+            startPos.y = 2f;
+            startPos.z = 10f;
+            anim.SetInteger("State", 3);
+            yield return new WaitForSeconds(2f);
+            Instantiate(CombPrefab, startPos, Quaternion.identity);
+            yield return new WaitForSeconds(2.4f);
+            IList<Battler> liveCharacters = allCharacters.Where(c => c.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+            foreach (Battler c in liveCharacters)
+            {
+                int baseDamage = (int)(user.BattleBehavior.Stats.SpAttack * Power * 6) - (c.BattleBehavior.Stats.SpDefense * 3);
+                if (baseDamage > 0)
+                    baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
+                else
+                    baseDamage = 0;
+                c.BattleBehavior.TakeDamage(user, baseDamage);
+            }
+            anim.SetInteger("State", 0);
         }
     }
 }

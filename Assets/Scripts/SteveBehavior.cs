@@ -64,6 +64,27 @@ public class SteveBehavior : BattleBehavior
         anim.SetInteger("State", 0);
     }
 
+    public override void TakeDamage(Battler user, int baseDamage)
+    {
+        base.TakeDamage(user, baseDamage);
+        if (!defending)
+        {
+            Battler.StartCoroutine(Anim());
+        }
+    }
+
+    IEnumerator Anim()
+    {
+        anim.SetInteger("State", 10);
+        yield return 0;
+        anim.SetInteger("State", 0);
+    }
+
+    public override void Victory()
+    {
+        anim.SetBool("Win", true);
+    }
+
     class Restore : Action
     {
         public Restore(BattleBehavior parent)
@@ -76,7 +97,7 @@ public class SteveBehavior : BattleBehavior
             ActionTarget = ActionTarget.LivePartyMember;
         }
 
-        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
             Animator anim = user.GetComponent<Animator>();
             anim.SetInteger("State", 3);

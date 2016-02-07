@@ -84,7 +84,9 @@
     <Compile Include="Assets\Scripts\Battler.cs" />
     <Compile Include="Assets\Scripts\BattlerID.cs" />
     <Compile Include="Assets\Scripts\BattlerType.cs" />
+    <Compile Include="Assets\Scripts\Circle.cs" />
     <Compile Include="Assets\Scripts\Comb.cs" />
+    <Compile Include="Assets\Scripts\Cutscene.cs" />
     <Compile Include="Assets\Scripts\DamageNumber.cs" />
     <Compile Include="Assets\Scripts\EventHandlers.cs" />
     <Compile Include="Assets\Scripts\GameOverScreen.cs" />

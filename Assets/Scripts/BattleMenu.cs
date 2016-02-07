@@ -154,7 +154,10 @@ public class BattleMenu : MonoBehaviour {
                 {
                     selected = allEnemies[enemyIndex];
                 }
-                CharacterCursor.transform.localPosition = selected.gameObject.transform.position + new Vector3(0f, 2f + cursorY, 0f);
+                //CharacterCursor.transform.localPosition = selected.gameObject.transform.position + new Vector3(0f, 2f + cursorY, 0f);
+                Renderer r = selected.gameObject.GetComponentInChildren<Renderer>();
+                Debug.Log(r.bounds.size.y);
+                CharacterCursor.transform.localPosition = selected.gameObject.transform.position + new Vector3(0f, r.bounds.size.y + 1.5f + cursorY - selected.gameObject.transform.position.y, 0f);
             }
             else
             {
@@ -377,7 +380,8 @@ public class BattleMenu : MonoBehaviour {
 
     void MoveCursor(Battler character)
     {
-        CharacterCursor.transform.localPosition = character.gameObject.transform.localPosition + new Vector3(0f, 2f + cursorY, 0f);
+        Renderer r = character.gameObject.GetComponentInChildren<Renderer>();
+        CharacterCursor.transform.localPosition = character.gameObject.transform.position + new Vector3(0f, r.bounds.size.y + 1.5f + cursorY - character.gameObject.transform.position.y, 0f);
     }
 
     void CharacterMenu()
@@ -555,7 +559,8 @@ public class BattleMenu : MonoBehaviour {
                         Target = allEnemies[enemyIndex],
                         ActionTarget = ActionTarget.Enemy,
                         ActionIndex = specialIndex,
-                        ActionType = ActionType.Special
+                        ActionType = ActionType.Special,
+                        Action = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex]
                     };
                     OnCharacterTurn(args);
                     Finish();
@@ -617,7 +622,8 @@ public class BattleMenu : MonoBehaviour {
                         Target = allCharacters[charIndex],
                         ActionTarget = ActionTarget.PartyMember,
                         ActionIndex = specialIndex,
-                        ActionType = ActionType.Special
+                        ActionType = ActionType.Special,
+                        Action = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex]
                     };
                     OnCharacterTurn(args);
                 }
@@ -654,7 +660,8 @@ public class BattleMenu : MonoBehaviour {
                         Target = null,
                         ActionTarget = ActionTarget.AllEnemies,
                         ActionIndex = specialIndex,
-                        ActionType = ActionType.Special
+                        ActionType = ActionType.Special,
+                        Action = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex]
                     };
                     OnCharacterTurn(args);
                     Finish();

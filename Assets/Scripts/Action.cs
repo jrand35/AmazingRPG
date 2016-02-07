@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class Action : MonoBehaviour {
     protected BattleBehavior BattleBehavior { get; set; }
@@ -15,7 +16,7 @@ public abstract class Action : MonoBehaviour {
             return BattleBehavior.Stats.CurrentSP >= RequiredSP;
         }
     }
-    public abstract IEnumerator Run(Battler user, Battler target, BattleController battlecontroller);
+    public abstract IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController battlecontroller);
     //Implement a BattleBehavior.UseSP function
     public void UseSP(Battler user)
     {
