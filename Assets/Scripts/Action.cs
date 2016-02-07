@@ -15,7 +15,7 @@ public abstract class Action : MonoBehaviour {
             return BattleBehavior.Stats.CurrentSP >= RequiredSP;
         }
     }
-    public abstract IEnumerator Run(Battler user, Battler target);
+    public abstract IEnumerator Run(Battler user, Battler target, BattleController battlecontroller);
     //Implement a BattleBehavior.UseSP function
     public void UseSP(Battler user)
     {

@@ -69,10 +69,10 @@ public class HyperRatBehavior : BattleBehavior
             Description = "";
             RequiredSP = 10;
             Power = 1.3f;
-            ActionTarget = ActionTarget.PartyMember;
+            ActionTarget = ActionTarget.LivePartyMember;
         }
 
-        public override IEnumerator Run(Battler user, Battler target)
+        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
         {
             SpecialEffectsManager.SpecialName(Name);
             Animator anim = user.gameObject.GetComponent<Animator>();

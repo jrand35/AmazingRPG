@@ -76,7 +76,7 @@ public class SteveBehavior : BattleBehavior
             ActionTarget = ActionTarget.LivePartyMember;
         }
 
-        public override IEnumerator Run(Battler user, Battler target)
+        public override IEnumerator Run(Battler user, Battler target, BattleController bc)
         {
             Animator anim = user.GetComponent<Animator>();
             anim.SetInteger("State", 3);

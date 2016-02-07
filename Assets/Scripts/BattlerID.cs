@@ -5,5 +5,6 @@ public enum BattlerID {
     Character1 = 0,
     Character2,
     Rat,
-    HyperRat
+    HyperRat,
+    Trump
 }

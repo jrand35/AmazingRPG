@@ -137,7 +137,7 @@ public class BattleController : MonoBehaviour {
 
             case ActionType.Special:
                 user.BattleBehavior.SpecialAbilities[actionIndex].UseSP(user);
-                yield return user.BattleBehavior.SpecialAbilities[actionIndex].Run(user, target);
+                yield return user.BattleBehavior.SpecialAbilities[actionIndex].Run(user, target, this);
                 break;
 
             case ActionType.Item:
