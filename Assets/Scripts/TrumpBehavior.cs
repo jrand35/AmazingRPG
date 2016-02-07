@@ -20,9 +20,9 @@ public class TrumpBehavior : BattleBehavior
         Name = "Donald Trump";
         Stats = new Stats()
         {
-            MaxHP = 1500,
+            MaxHP = 1700,
             MaxSP = 1000,
-            CurrentHP = 1500,
+            CurrentHP = 1700,
             CurrentSP = 1000,
             Attack = 25,
             Defense = 22,
@@ -42,8 +42,8 @@ public class TrumpBehavior : BattleBehavior
         Battler target = liveCharacters[index];
         float attackType = UnityEngine.Random.Range(0f, 1f);
         //Choose to use a normal attack or a special attack
-        //ActionType actionType = attackType < 0.75f ? ActionType.Attack : ActionType.Special;
-        ActionType actionType = ActionType.Special;
+        ActionType actionType = attackType < 0.75f ? ActionType.Attack : ActionType.Special;
+        //ActionType actionType = ActionType.Special;
         int specialIndex = 0;
         ActionTarget actionTarget = ActionTarget.PartyMember;
         if (actionType == ActionType.Special)
@@ -106,7 +106,7 @@ public class TrumpBehavior : BattleBehavior
             Name = "Great Wall of Mexico";
             Description = "";
             RequiredSP = 15;
-            Power = 2f;
+            Power = 1.6f;
             ActionTarget = ActionTarget.LivePartyMember;
         }
 
@@ -159,6 +159,28 @@ public class TrumpBehavior : BattleBehavior
             else
                 baseDamage = 0;
             target.BattleBehavior.TakeDamage(user, baseDamage);
+        }
+    }
+
+    class CombOver : Action
+    {
+        GameObject CombPrefab;
+        Vector3 cameraPos;
+        public CombOver(BattleBehavior parent, GameObject combPrefab)
+        {
+            cameraPos = Camera.main.transform.position;
+            CombPrefab = combPrefab;
+            BattleBehavior = parent;
+            Name = "Stylish Comb-Over";
+            Description = "";
+            RequiredSP = 12;
+            Power = 1.1f;
+            ActionTarget = ActionTarget.Party;
+        }
+
+        public override IEnumerator Run(Battler user, Battler target, BattleController battlecontroller)
+        {
+            yield return 0;
         }
     }
 }

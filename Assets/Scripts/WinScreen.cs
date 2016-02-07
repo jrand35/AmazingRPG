@@ -18,6 +18,10 @@ public class WinScreen : MonoBehaviour {
             {
                 SceneManager.LoadScene("Scene 2");
             }
+            else if (SceneManager.GetActiveScene().name == "Scene 2")
+            {
+                SceneManager.LoadScene("Scene 3");
+            }
         }
 	}
 
