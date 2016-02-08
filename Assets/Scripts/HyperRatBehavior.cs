@@ -87,7 +87,7 @@ public class HyperRatBehavior : BattleBehavior
 
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
-            SpecialEffectsManager.SpecialName(Name);
+            BattleBehavior.Battler.StartCoroutine(SpecialEffectsManager.SpecialName(Name));
             Animator anim = user.gameObject.GetComponent<Animator>();
             anim.SetInteger("State", 1);
             Vector3 startPos = user.gameObject.transform.position;

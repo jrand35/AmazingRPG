@@ -208,7 +208,7 @@ public class TrumpBehavior : BattleBehavior
 
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
-            SpecialEffectsManager.SpecialName(Name);
+            BattleBehavior.Battler.StartCoroutine(SpecialEffectsManager.SpecialName(Name));
             Animator anim = user.gameObject.GetComponent<Animator>();
             anim.SetInteger("State", 3);
             yield return new WaitForSeconds(2f);
@@ -244,7 +244,7 @@ public class TrumpBehavior : BattleBehavior
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController battlecontroller)
         {
             Animator anim = user.gameObject.GetComponent<Animator>();
-            SpecialEffectsManager.SpecialName(Name);
+            BattleBehavior.Battler.StartCoroutine(SpecialEffectsManager.SpecialName(Name));
             Vector3 startPos = allCharacters[0].gameObject.transform.position;
             startPos.y = 2f;
             startPos.z = 10f;
@@ -281,7 +281,7 @@ public class TrumpBehavior : BattleBehavior
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController battlecontroller)
         {
             Animator anim = user.gameObject.GetComponent<Animator>();
-            SpecialEffectsManager.SpecialName(Name);
+            BattleBehavior.Battler.StartCoroutine(SpecialEffectsManager.SpecialName(Name));
             anim.SetInteger("State", 3);
             yield return new WaitForSeconds(2f);
             SpecialEffectsManager.FireParticles(target);

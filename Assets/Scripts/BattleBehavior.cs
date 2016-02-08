@@ -17,7 +17,7 @@ public abstract class BattleBehavior : MonoBehaviour {
     public Status Status { get; set; }
     public IList<Action> SpecialAbilities { get; protected set; }
     public virtual bool Defending { get; set; }
-    protected Battler Battler { get; set; }
+    public Battler Battler { get; set; }
     //For letting an enemy choose a random target
     //protected Battler Target { get; set; }
 	// Use this for initialization
@@ -199,7 +199,7 @@ public abstract class BattleBehavior : MonoBehaviour {
         if (Status.StatusEffect == StatusEffect.Burn)
         {
             float rand = UnityEngine.Random.Range(0.95f, 1.05f);
-            float baseDmg = Stats.MaxHP * 0.18f * rand;
+            float baseDmg = Stats.MaxHP * 0.1f * rand;
             int dmg = Mathf.RoundToInt(baseDmg);
             TakeDirectDamage(Battler, dmg);
         }

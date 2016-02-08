@@ -119,14 +119,24 @@ public static class SpecialEffectsManager {
         MonoBehaviour.Destroy(deathParticles, 3f);
     }
 
-    public static void SpecialName(string specialAttackName)
+    public static IEnumerator SpecialName(string specialAttackName)
     {
         MonoBehaviour.Destroy(specialName);
         specialName = MonoBehaviour.Instantiate(SpecialNamePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         specialName.transform.SetParent(Canvas.transform);
-        specialName.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero;
         specialName.GetComponentInChildren<Text>().text = specialAttackName;
-        MonoBehaviour.Destroy(specialName, 2f);
+        for (int i = 1; i <= 15; i++)
+        {
+            specialName.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero + new Vector3(0f, 100f * (1 - (float)i / 15), 0f);
+            yield return 0;
+        }
+        yield return new WaitForSeconds(1f);
+        for (int i = 1; i <= 15; i++)
+        {
+            specialName.transform.GetComponent<RectTransform>().anchoredPosition = Vector3.zero + new Vector3(0f, 100f * (float)i / 15, 0f);
+            yield return 0;
+        }
+        MonoBehaviour.Destroy(specialName);
     }
 
     public static IEnumerator DeathCircles(Battler battler)

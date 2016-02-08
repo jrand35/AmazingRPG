@@ -9,6 +9,8 @@ public class BattleMenu : MonoBehaviour {
     public Text CharacterName;
     public Text DescriptionText;
     public Text[] Text;
+    public Image[] Buttons;
+    public Image MainImage;
     public IList<Battler> allCharacters { get; set; }
     public IList<Battler> allEnemies { get; set; }
     public GameObject MagicCirclePrefab;
@@ -251,6 +253,7 @@ public class BattleMenu : MonoBehaviour {
     {
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Main;
+        ShowButtons(true);
         switch (PrevMenu)
         {
             case BattleMenuItem.Enemy:
@@ -272,11 +275,57 @@ public class BattleMenu : MonoBehaviour {
         Text[3].text = "Defend";
     }
 
+    void ShowButtons(bool show)
+    {
+        foreach (Image img in Buttons)
+        {
+            img.enabled = show;
+        }
+        MainImage.enabled = !show;
+        switch (CurrentMenu)
+        {
+            case BattleMenuItem.Enemy:
+                //Attack
+                if (PrevMenu == BattleMenuItem.Main)
+                {
+                    MainImage.sprite = Buttons[0].sprite;
+                }
+                //Special attack
+                else if (PrevMenu == BattleMenuItem.Special)
+                {
+                    MainImage.sprite = Buttons[1].sprite;
+                }
+                break;
+
+            case BattleMenuItem.Player:
+                //Special healing ability
+                if (PrevMenu == BattleMenuItem.Special)
+                {
+                    MainImage.sprite = Buttons[1].sprite;
+                }
+                //Item
+                else if (PrevMenu == BattleMenuItem.Item)
+                {
+                    MainImage.sprite = Buttons[2].sprite;
+                }
+                break;
+
+            case BattleMenuItem.Special:
+                MainImage.sprite = Buttons[1].sprite;
+                break;
+
+            case BattleMenuItem.Item:
+                MainImage.sprite = Buttons[2].sprite;
+                break;
+        }
+    }
+
     void SpecialMenu()
     {
         IList<Action> specialAbilities = currentCharacter.BattleBehavior.SpecialAbilities;
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Special;
+        ShowButtons(false);
 
         listSize = specialAbilities.Count;
         for (int i = 0; i < maxListSize; i++)
@@ -298,6 +347,7 @@ public class BattleMenu : MonoBehaviour {
         CharacterCursor.SetActive(true);
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Enemy;
+        ShowButtons(false);
         MoveCursor(allEnemies[enemyIndex]);
         //If choosing an enemy to attack with a special attack
         switch (PrevMenu)
@@ -356,6 +406,7 @@ public class BattleMenu : MonoBehaviour {
         IList<Item> inventory = currentCharacter.Inventory;
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Item;
+        ShowButtons(false);
 
         if (inventory.Count > 0)
         {
@@ -395,9 +446,10 @@ public class BattleMenu : MonoBehaviour {
         CharacterCursor.SetActive(true);
         PrevMenu = CurrentMenu;
         CurrentMenu = BattleMenuItem.Player;
+        ShowButtons(false);
         IList<Battler> characterList = allCharacters;
         // if choosing a healing special ability that can only target live party members
-        if (PrevMenu == BattleMenuItem.Special)
+        if (PrevMenu == BattleMenuItem.Special || PrevMenu == BattleMenuItem.Item)
         {
             Action specialAttack = currentCharacter.BattleBehavior.SpecialAbilities[specialIndex];
             if (specialAttack.ActionTarget == ActionTarget.LivePartyMember)
@@ -484,11 +536,13 @@ public class BattleMenu : MonoBehaviour {
             //See which menu the player is currently in
             if (i == currentIndex)
             {
-                Text[i].color = new Color(1f, 1f, 1f);
+                Buttons[i].color = Color.white;
+                Text[i].color = Color.white;
             }
             else
             {
-                Text[i].color = new Color(0.5f, 0.5f, 0.5f);
+                Buttons[i].color = Color.white * 0.5f;
+                Text[i].color = Color.white * 0.5f;
             }
         }
 
