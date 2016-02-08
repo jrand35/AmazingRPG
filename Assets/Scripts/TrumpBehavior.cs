@@ -22,9 +22,9 @@ public class TrumpBehavior : BattleBehavior
         Name = "Donald Trump";
         Stats = new Stats()
         {
-            MaxHP = 1700,
+            MaxHP = 2100,
             MaxSP = 1000,
-            CurrentHP = 1700,
+            CurrentHP = 2100,
             CurrentSP = 1000,
             Attack = 25,
             Defense = 22,
@@ -36,6 +36,7 @@ public class TrumpBehavior : BattleBehavior
         SpecialAbilities = new List<Action>();
         SpecialAbilities.Add(new GreatWallOfMexico(this, WallPrefab));
         SpecialAbilities.Add(new CombOver(this, CombPrefab));
+        SpecialAbilities.Add(new YoureFired(this));
     }
 
     public override TurnArgs ChooseAttack(IList<Battler> allCharacters)
@@ -79,15 +80,41 @@ public class TrumpBehavior : BattleBehavior
         return args;
     }
 
+    IEnumerator DeathCameraShake()
+    {
+        Vector3 cameraPos = Camera.main.transform.position;
+        float maxAmpl = 0.8f;
+        float ampl = maxAmpl;
+        int duration = 90;
+        for (int i = duration; i >= 0; i--)
+        {
+            ampl = maxAmpl * (float)i / duration;
+            Camera.main.transform.position = cameraPos + Random.insideUnitSphere * ampl;
+            yield return 0;
+        }
+
+        Camera.main.transform.position = cameraPos;
+    }
+
     public override IEnumerator EnemyDie()
     {
+        Renderer r = Battler.GetComponentInChildren<Renderer>();
         //Amount of time to wait after taking damage
         yield return new WaitForSeconds(0.5f);
-        Renderer r = Battler.GetComponentInChildren<Renderer>();
+        Battler.StartCoroutine(SpecialEffectsManager.DeathCircles(Battler));
+        r.material.EnableKeyword("_EMISSION");
+        for (int i = 1; i <= 80; i++)
+        {
+            r.material.SetColor("_EmissionColor", Color.white * 0.7f * (float)i / 80);
+            yield return 0;
+        }
+        yield return new WaitForSeconds(2f);
         Color startColor = r.material.color;
         Color currentColor = startColor;
-        int duration = 55;
-        SpecialEffectsManager.DeathParticles(Battler);
+        Color startEmissionColor = r.material.GetColor("_EmissionColor");
+        SpecialEffectsManager.DeathParticles2(Battler);
+        Battler.StartCoroutine(DeathCameraShake());
+        int duration = 110;
         //All of this is necessary just to fade out the object...
         r.material.SetFloat("_Mode", 3);
         r.material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
@@ -102,9 +129,13 @@ public class TrumpBehavior : BattleBehavior
             currentColor.a = startColor.a * (1f - ((float)i / duration));
             //Fix
             r.material.color = currentColor;
+            Color currentEmissionColor = startEmissionColor;
+            currentEmissionColor = startEmissionColor * (1f - ((float)i / duration));
+            r.material.SetColor("_EmissionColor", currentEmissionColor);
             yield return 0;
         }
         r.enabled = false;
+        yield return new WaitForSeconds(0.5f);
     }
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
@@ -231,6 +262,38 @@ public class TrumpBehavior : BattleBehavior
                     baseDamage = 0;
                 c.BattleBehavior.TakeDamage(user, baseDamage);
             }
+            anim.SetInteger("State", 0);
+        }
+    }
+
+    class YoureFired : Action
+    {
+        public YoureFired(BattleBehavior parent)
+        {
+            BattleBehavior = parent;
+            Name = "You're Fired!";
+            Description = "";
+            RequiredSP = 12;
+            Power = 1.1f;
+            ActionTarget = ActionTarget.LivePartyMember;
+        }
+
+        public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController battlecontroller)
+        {
+            Animator anim = user.gameObject.GetComponent<Animator>();
+            SpecialEffectsManager.SpecialName(Name);
+            anim.SetInteger("State", 3);
+            yield return new WaitForSeconds(2f);
+            SpecialEffectsManager.FireParticles(target);
+            yield return new WaitForSeconds(1f);
+            int baseDamage = (int)(user.BattleBehavior.Stats.SpAttack * Power * 6) - (target.BattleBehavior.Stats.SpDefense * 3);
+            if (baseDamage > 0)
+                baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
+            else
+                baseDamage = 0;
+            target.BattleBehavior.TakeDamage(user, baseDamage);
+            //50% chance of inflicting a burn
+            target.BattleBehavior.AddStatusEffect(user, StatusEffect.Burn, 0.5f);
             anim.SetInteger("State", 0);
         }
     }

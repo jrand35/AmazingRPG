@@ -10,6 +10,10 @@ public class Status : MonoBehaviour{
     }
     public bool SetStatus(StatusEffect newStatus)
     {
+        if (StatusEffect == StatusEffect.Defeated)
+        {
+            return false;
+        }
         switch (newStatus)
         {
             case StatusEffect.None:

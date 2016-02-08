@@ -33,9 +33,9 @@ public class SteveBehavior : BattleBehavior
         Stats = new Stats
         {
             MaxHP = 400,
-            MaxSP = 400,
+            MaxSP = 230,
             CurrentHP = 400,
-            CurrentSP = 400,
+            CurrentSP = 230,
             Attack = 23,
             Defense = 20,
             SpAttack = 25,
@@ -90,9 +90,9 @@ public class SteveBehavior : BattleBehavior
         public Restore(BattleBehavior parent)
         {
             BattleBehavior = parent;
-            Name = "Restore";
-            Description = "Restores 200 HP to a party member.";
-            RequiredSP = 5;
+            Name = "Super Restore";
+            Description = "Restores 250 HP to a party member.";
+            RequiredSP = 20;
             Power = 0;
             ActionTarget = ActionTarget.LivePartyMember;
         }
@@ -112,9 +112,9 @@ public class SteveBehavior : BattleBehavior
                 m.SetColor("_EmissionColor", Color.white * 0.6f * Mathf.Sin((float) i / duration * Mathf.PI));
                 yield return 0;
             }
-            target.BattleBehavior.RestoreHP(user, 200);
+            target.BattleBehavior.RestoreHP(user, 250);
             anim.SetInteger("State", 0);
-            Debug.Log(user.BattleBehavior.Name + " restored 200 HP to " + target.BattleBehavior.Name);
+            Debug.Log(user.BattleBehavior.Name + " restored 250 HP to " + target.BattleBehavior.Name);
         }
     }
 }

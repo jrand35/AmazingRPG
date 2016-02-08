@@ -26,7 +26,7 @@ public class HyperRatBehavior : BattleBehavior
             Defense = 20,
             SpAttack = 30,
             SpDefense = 25,
-            Speed = 32,
+            Speed = 28,
             Luck = 22
         };
         SpecialAbilities = new List<Action>();

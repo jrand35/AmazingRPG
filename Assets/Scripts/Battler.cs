@@ -28,6 +28,12 @@ public class Battler : MonoBehaviour
 
             case BattlerID.Character2:
                 BattlerType = BattlerType.Character;
+                BattleBehavior = new CainaBehavior(this);
+                BattleBehavior.Initialize();
+                break;
+
+            case BattlerID.Character3:
+                BattlerType = BattlerType.Character;
                 BattleBehavior = new SteveBehavior(this);
                 BattleBehavior.Initialize();
                 break;

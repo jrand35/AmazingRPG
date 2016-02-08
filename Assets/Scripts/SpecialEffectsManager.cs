@@ -41,6 +41,19 @@ public static class SpecialEffectsManager {
         }
     }
 
+    private static GameObject dp2;
+    private static GameObject DeathParticlesPrefab2
+    {
+        get
+        {
+            if (dp2 == null)
+            {
+                dp2 = Resources.Load<GameObject>("DeathParticles2");
+            }
+            return dp2;
+        }
+    }
+
     //Current instance
     private static GameObject specialName;
     private static GameObject specialNamePrefab;
@@ -69,6 +82,19 @@ public static class SpecialEffectsManager {
         }
     }
 
+    private static GameObject fireParticles;
+    private static GameObject FireParticlesPrefab
+    {
+        get
+        {
+            if (fireParticles == null)
+            {
+                fireParticles = Resources.Load<GameObject>("FireParticles");
+            }
+            return fireParticles;
+        }
+    }
+
     public static void RestoreParticles(Battler battler)
     {
         Vector3 pos = battler.gameObject.transform.position;
@@ -85,6 +111,14 @@ public static class SpecialEffectsManager {
         MonoBehaviour.Destroy(deathParticles, 3f);
     }
 
+    public static void DeathParticles2(Battler battler)
+    {
+        Vector3 pos = battler.gameObject.transform.position;
+        pos.y = 0f;
+        GameObject deathParticles = MonoBehaviour.Instantiate(DeathParticlesPrefab2, pos, Quaternion.identity) as GameObject;
+        MonoBehaviour.Destroy(deathParticles, 3f);
+    }
+
     public static void SpecialName(string specialAttackName)
     {
         MonoBehaviour.Destroy(specialName);
@@ -95,10 +129,25 @@ public static class SpecialEffectsManager {
         MonoBehaviour.Destroy(specialName, 2f);
     }
 
-    public static void DeathCircle(Battler battler)
+    public static IEnumerator DeathCircles(Battler battler)
     {
-        Vector3 dir = Random.insideUnitSphere;
-        Quaternion facing = Quaternion.LookRotation(dir);
-        MonoBehaviour.Instantiate(DeathCirclePrefab, battler.gameObject.transform.position, facing);
+        int circleCount = 25;
+        Vector3 circlePos = battler.gameObject.transform.position;
+        circlePos.y = battler.GetComponentInChildren<Renderer>().bounds.center.y;
+        for (int i = 0; i < circleCount; i++)
+        {
+            Vector3 dir = Random.insideUnitSphere;
+            Quaternion facing = Quaternion.LookRotation(dir);
+            MonoBehaviour.Instantiate(DeathCirclePrefab, circlePos, facing);
+            yield return new WaitForSeconds(0.08f);
+        }
+    }
+
+    public static void FireParticles(Battler battler)
+    {
+        Vector3 pos = battler.gameObject.transform.position;
+        pos.y = 0f;
+        GameObject fire = MonoBehaviour.Instantiate(FireParticlesPrefab, pos, Quaternion.Euler(-90f, 0f, 0f)) as GameObject;
+        MonoBehaviour.Destroy(fire, 5f);
     }
 }

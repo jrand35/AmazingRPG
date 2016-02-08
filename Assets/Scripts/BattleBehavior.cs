@@ -8,8 +8,10 @@ public abstract class BattleBehavior : MonoBehaviour {
     public static event HPTextHandler HPText;
     public static event SpecialEffectsHandler SpecialEffects;
     public static event Action<BattleBehavior, BattlerType> Death;
+    public static event Action<Battler> Burned;
     public event SpecialEffectsHandler a;
     public event CharacterHPHandler HPChanged;
+    public event CharacterHPHandler SPChanged;
     public string Name { get; protected set; }
     public Stats Stats { get; set; }
     public Status Status { get; set; }
@@ -144,6 +146,70 @@ public abstract class BattleBehavior : MonoBehaviour {
             {
                 Death(this, Battler.BattlerType);
             }
+        }
+    }
+
+    public virtual void AddStatusEffect(Battler user, StatusEffect effect, float chance)
+    {
+        float rand = UnityEngine.Random.Range(0f, 1f);
+        if (rand <= chance)
+        {
+            bool result = Status.SetStatus(effect);
+            if (result) {
+                if (effect == StatusEffect.Burn)
+                {
+                    if (Burned != null)
+                    {
+                        Burned(Battler);
+                    }
+                }
+            }
+        }
+    }
+
+    void TakeDirectDamage(Battler user, int baseDamage)
+    {
+        Debug.Log("Took damage " + baseDamage.ToString());
+        Stats.CurrentHP -= baseDamage;
+        if (Stats.CurrentHP < 0)
+        {
+            Stats.CurrentHP = 0;
+        }
+        if (HPChanged != null)
+        {
+            HPChanged(Stats.CurrentHP, Stats.MaxHP);
+        }
+        if (HPText != null)
+        {
+            HPText(Battler, -baseDamage);
+        }
+
+        if (Stats.CurrentHP == 0)
+        {
+            Status.SetStatus(StatusEffect.Defeated);
+            if (Death != null)
+            {
+                Death(this, Battler.BattlerType);
+            }
+        }
+    }
+
+    public virtual void EndOfTurn()
+    {
+        if (Status.StatusEffect == StatusEffect.Burn)
+        {
+            float rand = UnityEngine.Random.Range(0.95f, 1.05f);
+            float baseDmg = Stats.MaxHP * 0.18f * rand;
+            int dmg = Mathf.RoundToInt(baseDmg);
+            TakeDirectDamage(Battler, dmg);
+        }
+    }
+
+    public void SPEvent(int sp, int maxSP)
+    {
+        if (SPChanged != null)
+        {
+            SPChanged(sp, maxSP);
         }
     }
 

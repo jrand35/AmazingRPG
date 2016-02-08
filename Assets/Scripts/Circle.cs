@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Circle : MonoBehaviour {
-    int duration = 30;
+    int duration = 40;
     Color col;
     float initAlpha;
     Vector3 startScale;

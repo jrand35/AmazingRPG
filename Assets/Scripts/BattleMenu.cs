@@ -146,9 +146,14 @@ public class BattleMenu : MonoBehaviour {
                 time += 0.1f;
                 cursorY = 0.5f * Mathf.Sin(time);
                 Battler selected = null;
+                IList<Battler> characterList = allCharacters;
                 if (CurrentMenu == BattleMenuItem.Player)
                 {
-                    selected = allCharacters[charIndex];
+                    if (PrevMenu == BattleMenuItem.Special && currentCharacter.BattleBehavior.SpecialAbilities[specialIndex].ActionTarget == ActionTarget.LivePartyMember)
+                    {
+                        characterList = allCharacters.Where(c => c.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+                    }
+                    selected = characterList[charIndex];
                 }
                 else if (CurrentMenu == BattleMenuItem.Enemy)
                 {
@@ -616,10 +621,15 @@ public class BattleMenu : MonoBehaviour {
                 }
                 else if (PrevMenu == BattleMenuItem.Special)
                 {
+                    IList<Battler> characterList = allCharacters;
+                    if (currentCharacter.BattleBehavior.SpecialAbilities[specialIndex].ActionTarget == ActionTarget.LivePartyMember)
+                    {
+                        characterList = allCharacters.Where(c => c.BattleBehavior.Status.StatusEffect != StatusEffect.Defeated).ToList();
+                    }
                     TurnArgs args = new TurnArgs
                     {
                         User = currentCharacter,
-                        Target = allCharacters[charIndex],
+                        Target = characterList[charIndex],
                         ActionTarget = ActionTarget.PartyMember,
                         ActionIndex = specialIndex,
                         ActionType = ActionType.Special,

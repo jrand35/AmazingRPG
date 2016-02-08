@@ -16,6 +16,7 @@ public class BattleController : MonoBehaviour {
     public GameObject LifebarPrefab;
     public GameObject ShieldPrefab;
     public GameObject DamageNumberPrefab;
+    public GameObject BurnTextPrefab;
     public GameObject RestoreParticlesPrefab;
     public Text text;
     public Battler[] Battlers;
@@ -53,7 +54,8 @@ public class BattleController : MonoBehaviour {
             //Attach lifebars
             GameObject lifebar = Instantiate(LifebarPrefab) as GameObject;
             lifebar.gameObject.transform.parent = Canvas.transform;
-            lifebar.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(20f, -20f - 55f * i);
+            //5 Pixels apart
+            lifebar.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(20f, -20f - 75f * i);
             lifebar.GetComponent<Lifebar>().Character = allCharacters[i];
             Lifebars.Insert(i, lifebar);
 
@@ -79,6 +81,7 @@ public class BattleController : MonoBehaviour {
     {
         BattleMenu.StartCharacterTurn += OnCharacterTurn;
         BattleBehavior.HPText += HPText;
+        BattleBehavior.Burned += BurnText;
         BattleBehavior.Death += BattlerDied;
     }
 
@@ -86,6 +89,7 @@ public class BattleController : MonoBehaviour {
     {
         BattleMenu.StartCharacterTurn -= OnCharacterTurn;
         BattleBehavior.HPText -= HPText;
+        BattleBehavior.Burned -= BurnText;
         BattleBehavior.Death -= BattlerDied;
     }
 
@@ -123,6 +127,16 @@ public class BattleController : MonoBehaviour {
         {
             dn.Color = Color.green;
         }
+    }
+
+    void BurnText(Battler battler)
+    {
+        Vector3 position = Camera.main.WorldToScreenPoint(battler.gameObject.transform.position);
+        position.x += 90f;
+        position.y += 30f;
+        GameObject text = Instantiate(BurnTextPrefab) as GameObject;
+        text.transform.SetParent(Canvas.transform);
+        text.transform.position = position;
     }
 	
 	void Update () {
@@ -252,7 +266,16 @@ public class BattleController : MonoBehaviour {
                     yield return 0;
                 }
             }
-            //yield return 0;
+            //End of turn
+            foreach (Battler b in allBattlers)
+            {
+                //StartCoroutine(b.BattleBehavior.EndOfTurn());
+                b.BattleBehavior.EndOfTurn();
+            }
+            while (wait)
+            {
+                yield return 0;
+            }
         }
     }
 }

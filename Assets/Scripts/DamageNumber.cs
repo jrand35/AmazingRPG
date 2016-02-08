@@ -34,7 +34,7 @@ public class DamageNumber : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
-        Destroy(gameObject, 2f);
+        Destroy(gameObject, 1.2f);
         StartCoroutine(Run());
 	}
 	

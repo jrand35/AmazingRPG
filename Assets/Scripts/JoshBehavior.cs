@@ -4,22 +4,39 @@ using System.Collections.Generic;
 
 public class JoshBehavior : BattleBehavior
 {
+    private bool defending;
+    public Animator anim;
     public JoshBehavior(Battler parent)
     {
         Battler = parent;
     }
 
+    public override bool Defending
+    {
+        get
+        {
+            return defending;
+        }
+        set
+        {
+            defending = value;
+            anim.SetBool("Defending", value);
+        }
+    }
+
     public override void Initialize()
     {
         base.Initialize();
+        defending = false;
+        anim = Battler.GetComponent<Animator>();
         Name = "Josh";
         Stats = new Stats
         {
             MaxHP = 500,
-            MaxSP = 500,
+            MaxSP = 210,
             CurrentHP = 500,
-            CurrentSP = 500,
-            Attack = 28,
+            CurrentSP = 210,
+            Attack = 30,
             Defense = 22,
             SpAttack = 30,
             SpDefense = 32,
@@ -33,13 +50,40 @@ public class JoshBehavior : BattleBehavior
 
     public override IEnumerator StandardAttack(Battler user, Battler target)
     {
+        Animator anim = user.GetComponent<Animator>();
         Vector3 startPos = user.gameObject.transform.position;
+        anim.SetInteger("State", 1);
         yield return Move.MoveInFrontOfBattler(user, target, startPos, new Vector3(-2f, 0f, 0f), 50);
+        anim.SetInteger("State", 2);
         int baseDamage = (user.BattleBehavior.Stats.Attack * 6) - (target.BattleBehavior.Stats.Defense * 3);
         baseDamage = new System.Random().Next((int)(baseDamage * 0.9), (int)(baseDamage * 1.1));
-        target.BattleBehavior.TakeDamage(user, baseDamage);
         yield return new WaitForSeconds(0.5f);
+        target.BattleBehavior.TakeDamage(user, baseDamage);
+        yield return new WaitForSeconds(0.3f);
+        anim.SetInteger("State", 1);
         yield return Move.MoveBackFromBattler(user, target, startPos, new Vector3(-2f, 0f, 0f), 50);
+        anim.SetInteger("State", 0);
+    }
+
+    public override void TakeDamage(Battler user, int baseDamage)
+    {
+        base.TakeDamage(user, baseDamage);
+        if (!Defending)
+        {
+            Battler.StartCoroutine(Anim());
+        }
+    }
+
+    IEnumerator Anim()
+    {
+        anim.SetInteger("State", 10);
+        yield return 0;
+        anim.SetInteger("State", 0);
+    }
+
+    public override void Victory()
+    {
+        anim.SetBool("Win", true);
     }
 
     class Restore : Action
@@ -48,14 +92,17 @@ public class JoshBehavior : BattleBehavior
         {
             BattleBehavior = parent;
             Name = "Restore";
-            Description = "Restores 200 HP to a party member.";
-            RequiredSP = 5;
+            Description = "Restores 100 HP to a party member.";
+            RequiredSP = 8;
             Power = 0;
             ActionTarget = ActionTarget.LivePartyMember;
         }
 
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
+            Animator anim = user.GetComponent<Animator>();
+            anim.SetInteger("State", 3);
+            yield return new WaitForSeconds(1.4f);
             int duration = 40;
             Material m = target.GetComponentInChildren<Renderer>().material;
             m.EnableKeyword("_EMISSION");
@@ -66,8 +113,9 @@ public class JoshBehavior : BattleBehavior
                 m.SetColor("_EmissionColor", Color.white * 0.6f * Mathf.Sin((float)i / duration * Mathf.PI));
                 yield return 0;
             }
-            target.BattleBehavior.RestoreHP(user, 200);
-            Debug.Log(user.BattleBehavior.Name + " restored 200 HP to " + target.BattleBehavior.Name);
+            target.BattleBehavior.RestoreHP(user, 100);
+            anim.SetInteger("State", 0);
+            Debug.Log(user.BattleBehavior.Name + " restored 100 HP to " + target.BattleBehavior.Name);
         }
     }
 
@@ -78,6 +126,8 @@ public class JoshBehavior : BattleBehavior
         int starCount = 15;
         GameObject StarPrefab;
         Light light;
+        Animator anim;
+
         public ShootingStars(BattleBehavior parent)
         {
             BattleBehavior = parent;
@@ -136,6 +186,9 @@ public class JoshBehavior : BattleBehavior
 
         public override IEnumerator Run(Battler user, Battler target, IList<Battler> allCharacters, IList<Battler> allEnemies, BattleController bc)
         {
+            anim = user.GetComponent<Animator>();
+            anim.SetInteger("State", 3);
+            yield return new WaitForSeconds(1.4f);
             Camera.main.hdr = true;
             Light light = GameObject.FindGameObjectWithTag("Light").GetComponent<Light>();
             yield return new WaitForSeconds(0.3f);
@@ -151,6 +204,7 @@ public class JoshBehavior : BattleBehavior
             target.BattleBehavior.TakeDamage(user, baseDamage);
             yield return Brighten();
             Camera.main.hdr = false;
+            anim.SetInteger("State", 0);
         }
     }
 }

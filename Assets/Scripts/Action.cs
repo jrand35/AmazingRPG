@@ -21,5 +21,10 @@ public abstract class Action : MonoBehaviour {
     public void UseSP(Battler user)
     {
         user.BattleBehavior.Stats.CurrentSP -= RequiredSP;
+        if (user.BattleBehavior.Stats.CurrentSP < 0)
+        {
+            user.BattleBehavior.Stats.CurrentSP = 0;
+        }
+        user.BattleBehavior.SPEvent(user.BattleBehavior.Stats.CurrentSP, user.BattleBehavior.Stats.MaxSP);
     }
 }
